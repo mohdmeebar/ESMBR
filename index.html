@@ -719,10 +719,10 @@ async function cardToCanvas(g){
   var mat=makeQRMatrix(g.id);
   if(mat){
     var qrSize=mat.size;
-    var cell=8;
+    var cell=11;
     var qrPx=qrSize*cell;
     var qrX=W/2-qrPx/2;
-    var qrY=800;
+    var qrY=890;
     var pad=16;
     // QR background box
     ctx.fillStyle="rgba(250,249,245,0.95)";
