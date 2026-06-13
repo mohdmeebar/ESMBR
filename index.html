@@ -258,7 +258,7 @@ function compressImage(dataUrl, maxW, maxH, quality){
       var cvs=document.createElement('canvas');
       cvs.width=cw; cvs.height=ch;
       cvs.getContext('2d').drawImage(img,0,0,cw,ch);
-      resolve(cvs.toDataURL('image/jpeg', quality||0.7));
+      resolve(cvs.toDataURL('image/png'));
     };
     img.onerror=function(){resolve(dataUrl);};
     img.src=dataUrl;
