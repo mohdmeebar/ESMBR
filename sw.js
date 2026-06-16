@@ -1,5 +1,5 @@
 // Service Worker - إدارة ضيوف الحفل PWA
-const CACHE_NAME = 'esmbr-v1';
+const CACHE_NAME = 'esmbr-v2';
 const ASSETS = [
   './',
   './index.html',
