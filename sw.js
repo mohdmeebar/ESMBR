@@ -1,6 +1,6 @@
 // Service Worker — استراتيجية "الشبكة أولاً" لضمان ظهور آخر تحديث دائماً
 // غيّر رقم الإصدار عند كل تحديث مهم لإجبار المتصفح على تجديد الكاش
-const CACHE = 'esmbr-v3';
+const CACHE = 'esmbr-v4';
 
 // تفعيل فوري للنسخة الجديدة
 self.addEventListener('message', function (e) {
