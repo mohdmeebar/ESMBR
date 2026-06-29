@@ -48,9 +48,23 @@ body{background:#f0ede4;font-family:'Tajawal',sans-serif;direction:rtl}
 
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getFirestore,doc,onSnapshot,setDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import{getAuth,signInWithEmailAndPassword,signInAnonymously,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 var cfg={apiKey:"AIzaSyDoAwvsvu54mkWZPpC8o2bvw4T114OvxUI",authDomain:"emsbrra.firebaseapp.com",projectId:"emsbrra",storageBucket:"emsbrra.firebasestorage.app",messagingSenderId:"386120938439",appId:"1:386120938439:web:963fbbec76468a49eadfe2"};
 var app=initializeApp(cfg),db=getFirestore(app);
+var auth=getAuth(app);
+var isAdmin=false;
+window._adminEmail="";
+window._fbSignIn=function(email,pw){return signInWithEmailAndPassword(auth,email,pw);};
+// إعداد بريد المسؤول (يطابق الحساب في Firebase)
+try{localStorage.setItem("_adminEm","mohdmeebar@gmail.com");}catch(e){}
+onAuthStateChanged(auth,function(u){
+  isAdmin=!!(u&&!u.isAnonymous);
+  window._adminEmail=u&&u.email?u.email:"";
+  if(!u){ // لا جلسة — سجّل دخول مجهول للقراءة فقط
+    signInAnonymously(auth).catch(function(e){console.warn("anon signin failed",e);});
+  }
+});
 var guests=[],attendance={};
 
 function genId(){return Date.now().toString(36).toUpperCase()+Math.random().toString(36).substr(2,5).toUpperCase();}
@@ -1475,8 +1489,32 @@ async function _hmacSHA1(key,data){var k=await crypto.subtle.importKey("raw",new
 async function _totpCode(offset){var t=Math.floor(Date.now()/1000/30)+(offset===undefined?0:offset);var tb=[];for(var i=7;i>=0;i--){tb.push((t>>(i*8))&0xff);}var hmac=await _hmacSHA1(_b32dec(_TSEC),tb);var off=hmac[19]&0xf;var code=((hmac[off]&0x7f)<<24|(hmac[off+1]&0xff)<<16|(hmac[off+2]&0xff)<<8|(hmac[off+3]&0xff))%1000000;return String(code).padStart(6,"0");}
 function _h(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;}return(h>>>0).toString(16);}
 function _gh(){return localStorage.getItem("_pwh")||_DH;}
-function _unlock(){sessionStorage.setItem("_auth",_gh());document.getElementById("gate").style.display="none";}
-function _dologin(){var v=document.getElementById("pwIn").value;if(_h(v)===_gh()){_unlock();}else{document.getElementById("pwErr").style.display="block";document.getElementById("pwIn").value="";}}
+function _unlock(){sessionStorage.setItem("_auth",_gh());document.getElementById("gate").style.display="none";_adminSignIn();}
+function _adminSignIn(){
+  try{
+    var em=localStorage.getItem("_adminEm");
+    var pw=sessionStorage.getItem("_adminPw");
+    if(em&&pw&&window._fbSignIn){window._fbSignIn(em,pw);}
+  }catch(e){}
+}
+function _dologin(){
+  var v=document.getElementById("pwIn").value;
+  var em=localStorage.getItem("_adminEm");
+  // إذا تم إعداد حساب Firebase، استخدم تسجيل دخول حقيقي
+  if(em&&window._fbSignIn){
+    var btn=document.getElementById("gateLoginBtn");if(btn){btn.textContent="جارٍ الدخول...";btn.disabled=true;}
+    window._fbSignIn(em,v).then(function(){
+      sessionStorage.setItem("_adminPw",v);_unlock();
+    }).catch(function(e){
+      document.getElementById("pwErr").style.display="block";
+      document.getElementById("pwIn").value="";
+      if(btn){btn.textContent="دخول";btn.disabled=false;}
+    });
+    return;
+  }
+  // الوضع القديم (بدون Firebase Auth): تحقق محلي
+  if(_h(v)===_gh()){_unlock();}else{document.getElementById("pwErr").style.display="block";document.getElementById("pwIn").value="";}
+}
 var _ct=null;
 function _startCountdown(){function u(){var r=30-Math.floor(Date.now()/1000)%30;var el=document.getElementById("tfaCountdown");if(el)el.textContent=r+"s";var rg=document.getElementById("tfaRing");if(rg)rg.style.strokeDashoffset=Math.round((1-r/30)*138);}u();_ct=setInterval(u,1000);}
 async function _verify2fa(){var input=document.getElementById("tfaIn").value.replace(/[^0-9]/g,"").padStart(6,"0");var codes=[];for(let _i=-10;_i<=10;_i++){codes.push(await _totpCode(_i));}if(codes.indexOf(input)>=0){if(_ct)clearInterval(_ct);_unlock();}else{document.getElementById("tfaErr").style.display="block";document.getElementById("tfaIn").value="";setTimeout(function(){document.getElementById("tfaErr").style.display="none";},2000);}}
