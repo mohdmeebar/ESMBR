@@ -62,6 +62,7 @@ async function saveSettings(){try{await setDoc(doc(db,"events","default"),{guest
 
 onSnapshot(doc(db,"events","default"),function(snap){
   var d=snap.exists()?snap.data():{guests:[],attendance:{}};
+  window._inviteLoaded=true;
   guests=d.guests||[];attendance=d.attendance||{};
   if(d.waSent)waSent=d.waSent;
   if(d.waSettings){if(d.waSettings.msg!==undefined)waMsg=d.waSettings.msg;if(d.waSettings.base!==undefined)waBase=d.waSettings.base;}
@@ -375,8 +376,12 @@ async function renderInvite(){
   document.documentElement.style.setProperty('--tl',S.sl);
   document.documentElement.style.setProperty('--td',S.sd);
   if(!g){
-    if(!guests.length){wrap.innerHTML='<div style="text-align:center;padding:80px 20px;color:'+S.mt+'">\u062c\u0627\u0631\u064d \u0627\u0644\u062a\u062d\u0645\u064a\u0644...</div>';return;}
-    wrap.innerHTML='<div style="text-align:center;padding:80px 20px;color:'+S.mt+'"><div style="font-size:44px">\u2716</div><div style="font-size:16px;margin-top:12px">\u0627\u0644\u062f\u0639\u0648\u0629 \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f\u0629</div></div>';return;
+    if(!window._inviteLoaded){
+      wrap.innerHTML='<div style="text-align:center;padding:80px 20px;color:'+S.mt+'">\u062c\u0627\u0631\u064d \u0627\u0644\u062a\u062d\u0645\u064a\u0644...</div>';
+      return;
+    }
+    wrap.innerHTML='<div style="text-align:center;padding:80px 20px;color:'+S.mt+'"><div style="font-size:44px">\u2716</div><div style="font-size:16px;margin-top:12px;font-weight:700">\u0627\u0644\u062f\u0639\u0648\u0629 \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f\u0629</div><div style="font-size:12px;margin-top:8px;direction:ltr;opacity:0.6">ID: '+inviteId+'</div></div>';
+    return;
   }
   wrap.innerHTML='<div style="max-width:440px;margin:0 auto;padding:24px 16px;text-align:center">'
     +'<div style="font-family:Cinzel,serif;font-size:11px;letter-spacing:4px;color:'+S.sl+';margin-bottom:18px">\u2726 \u2726 \u2726</div>'
@@ -795,9 +800,11 @@ async function cardToCanvas(g){
   // 1. Background - use custom bg image or gradient
   if(cBg){
     await new Promise(function(res){
+      var done=false;var fin=function(){if(!done){done=true;res();}};
       var bgImg=new Image();
-      bgImg.onload=function(){ctx.drawImage(bgImg,0,0,W,H);res();};
-      bgImg.onerror=res;
+      bgImg.onload=function(){ctx.drawImage(bgImg,0,0,W,H);fin();};
+      bgImg.onerror=fin;
+      setTimeout(fin,4000);
       bgImg.src=cBg;
     });
   } else {
@@ -859,18 +866,22 @@ async function cardToCanvas(g){
 
   // 7. Logo (load as image)
   var logoSrc=cLogo||"";
-  await new Promise(function(res){
-    var img=new Image();
-    img.onload=function(){
-      var lw=170,lh=255;
-      ctx.globalAlpha=0.8;
-      ctx.drawImage(img,W/2-lw/2,320,lw,lh);
-      ctx.globalAlpha=1;
-      res();
-    };
-    img.onerror=res;
-    img.src=logoSrc;
-  });
+  if(logoSrc){
+    await new Promise(function(res){
+      var done=false;var fin=function(){if(!done){done=true;res();}};
+      var img=new Image();
+      img.onload=function(){
+        var lw=170,lh=255;
+        ctx.globalAlpha=0.8;
+        ctx.drawImage(img,W/2-lw/2,320,lw,lh);
+        ctx.globalAlpha=1;
+        fin();
+      };
+      img.onerror=fin;
+      setTimeout(fin,4000);
+      img.src=logoSrc;
+    });
+  }
 
   // 8. Names and date
   ctx.font="500 28px 'Cinzel',serif";
@@ -1450,6 +1461,7 @@ window.applyTheme=function(){
 
 
 render();
+if(inviteId){setTimeout(function(){window._inviteLoaded=true;render();},8000);}
 if(isScan||isList){setTimeout(function(){if(tab==="scanner"&&!scanning)window.startScan();},400);}
 
 </script>
