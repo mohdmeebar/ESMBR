@@ -1032,15 +1032,11 @@ window.uploadBg=function(el){
   rd.onload=function(e){
     cBg=e.target.result;
     try{localStorage.setItem("_cbg",cBg);}catch(ex){}
-    var img=new Image();
-    img.onload=async function(){
-      var rgb=await extractColor(img);
-      if(rgb){themeRGB=rgb;S=buildTheme(rgb.r,rgb.g,rgb.b);saveSettings();}
-      render();
-      setTimeout(applyCardBg,100);
-      toast("تم حفظ الخلفية وتطبيق الثيم ✓");
-    };
-    img.src=cBg;
+    // الخلفية خلفية فقط — لا تغيّر الثيم أو لون الخط أو الباركود
+    saveSettings();
+    render();
+    setTimeout(applyCardBg,100);
+    toast("تم حفظ الخلفية ✓");
   };
   rd.readAsDataURL(f);
 };
