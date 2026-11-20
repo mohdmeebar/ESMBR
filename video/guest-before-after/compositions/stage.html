@@ -1,0 +1,352 @@
+<template>
+  <style>
+    @font-face { font-family: "HF Amiri"; font-weight: 700; src: url("assets/fonts/amiri-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; background: #22252a; }
+    #ba-canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+    #ba-divider {
+      position: absolute; left: 0; top: 0; width: 4px; height: 1080px; margin-left: -2px;
+      background: linear-gradient(#e3c47a, #b8913a); box-shadow: 0 0 24px rgba(227, 196, 122, 0.6);
+    }
+    #ba-fontprobe { position: absolute; left: -9999px; top: 0; font-family: "HF Amiri", "HF Cairo"; }
+  </style>
+  <div id="root" data-composition-id="stage" data-width="1920" data-height="1080" data-layout-ignore>
+    <canvas id="ba-canvas" width="1920" height="1080"></canvas>
+    <div id="ba-divider"></div>
+    <span id="ba-fontprobe">ا</span>
+  </div>
+  <script>
+    (function () {
+      const DUR = 20, W = 1920, H = 1080;
+      const C = { olive: "#4a5e2a", oliveLight: "#5f7a32", ivory: "#f7f1e3", beige: "#efe8d8", gold: "#b8913a", goldLight: "#e3c47a", ink: "#2b2f1f" };
+
+      // ---------- helpers ----------
+      function mulberry32(a) {
+        return function () {
+          a |= 0; a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const clamp01 = (x) => Math.max(0, Math.min(1, x));
+      const lerp = (a, b, p) => a + (b - a) * p;
+      const easeCache = {};
+      const ease = (n) => easeCache[n] || (easeCache[n] = gsap.parseEase(n || "none"));
+      function track(keys) {
+        return function (t) {
+          if (t <= keys[0][0]) return keys[0][1];
+          for (let i = 0; i < keys.length - 1; i++) {
+            const a = keys[i], b = keys[i + 1];
+            if (t < b[0]) {
+              const p = ease(b[2])((t - a[0]) / (b[0] - a[0]));
+              return Array.isArray(a[1]) ? a[1].map((v, j) => v + (b[1][j] - v) * p) : a[1] + (b[1] - a[1]) * p;
+            }
+          }
+          return keys[keys.length - 1][1];
+        };
+      }
+      function roundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+      }
+      function drawQR(ctx, x, y, size, seed, color, bg) {
+        const N = 25, m = size / N, rnd = mulberry32(seed);
+        ctx.fillStyle = bg; ctx.fillRect(x - m, y - m, size + 2 * m, size + 2 * m); ctx.fillStyle = color;
+        const finder = (fx, fy) => {
+          ctx.fillRect(x + fx * m, y + fy * m, 7 * m, 7 * m); ctx.fillStyle = bg;
+          ctx.fillRect(x + (fx + 1) * m, y + (fy + 1) * m, 5 * m, 5 * m); ctx.fillStyle = color;
+          ctx.fillRect(x + (fx + 2) * m, y + (fy + 2) * m, 3 * m, 3 * m);
+        };
+        const inF = (i, j) => (i < 8 && j < 8) || (i > N - 9 && j < 8) || (i < 8 && j > N - 9);
+        for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const r = rnd(); if (!inF(i, j) && r > 0.52) ctx.fillRect(x + i * m, y + j * m, Math.ceil(m), Math.ceil(m)); }
+        finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
+      }
+      function text(ctx, s, x, y, font, color, align) {
+        ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align || "center"; ctx.direction = "rtl"; ctx.textBaseline = "middle"; ctx.fillText(s, x, y);
+      }
+      const NAMES = ["محمد", "سارة", "خالد", "نورة", "عبدالله", "فاطمة", "أحمد", "ريم", "يوسف", "مريم", "سلمان", "هند"];
+
+      // ---------- canvases ----------
+      const mk = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+      const cardCanvas = mk(1024, 1408), backCanvas = mk(512, 704), screenCanvas = mk(600, 1280);
+      const paperCanvases = [mk(512, 704), mk(512, 704), mk(512, 704), mk(512, 704)];
+      const noteCanvas = mk(256, 256);
+
+      function paintCard() {
+        const ctx = cardCanvas.getContext("2d"), w = 1024, h = 1408;
+        const g = ctx.createLinearGradient(0, 0, w, h); g.addColorStop(0, "#fbf6ea"); g.addColorStop(1, "#efe4c9");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = C.gold; ctx.lineWidth = 6; ctx.strokeRect(44, 44, w - 88, h - 88); ctx.lineWidth = 2; ctx.strokeRect(64, 64, w - 128, h - 128);
+        ctx.save(); ctx.translate(w / 2, 150); ctx.rotate(Math.PI / 4); ctx.fillStyle = C.gold; ctx.fillRect(-16, -16, 32, 32); ctx.restore();
+        text(ctx, "دعوة", w / 2, 300, "700 170px 'HF Amiri'", C.gold);
+        text(ctx, "نتشرف بدعوتكم لحضور الحفل", w / 2, 450, "400 50px 'HF Cairo'", C.olive);
+        text(ctx, "ضيفنا الكريم", w / 2, 530, "700 46px 'HF Cairo'", C.ink);
+        drawQR(ctx, w / 2 - 220, 640, 440, 7, C.olive, "#fbf6ea");
+        text(ctx, "اعرض الرمز عند الدخول", w / 2, 1180, "400 40px 'HF Cairo'", C.olive);
+      }
+      function paintBack() {
+        const ctx = backCanvas.getContext("2d"), w = 512, h = 704;
+        ctx.fillStyle = C.olive; ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(227,196,122,0.35)"; ctx.lineWidth = 2;
+        for (let k = -h; k < w + h; k += 40) {
+          ctx.beginPath(); ctx.moveTo(k, 0); ctx.lineTo(k + h, h); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(k, h); ctx.lineTo(k + h, 0); ctx.stroke();
+        }
+        ctx.strokeStyle = C.goldLight; ctx.lineWidth = 4; ctx.strokeRect(24, 24, w - 48, h - 48);
+      }
+      function paintPapers() {
+        paperCanvases.forEach((cv, v) => {
+          const ctx = cv.getContext("2d"), w = 512, h = 704, rnd = mulberry32(100 + v);
+          ctx.fillStyle = ["#f2f1ec", "#eceae2", "#f5f3ea", "#e9e7df"][v]; ctx.fillRect(0, 0, w, h);
+          ctx.strokeStyle = "rgba(90,120,170,0.35)"; ctx.lineWidth = 2;
+          for (let y = 120; y < h; y += 46) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+          ctx.strokeStyle = "rgba(200,80,80,0.4)"; ctx.beginPath(); ctx.moveTo(w - 60, 0); ctx.lineTo(w - 60, h); ctx.stroke();
+          ctx.save(); ctx.translate(w / 2, 70); ctx.rotate((rnd() - 0.5) * 0.08);
+          text(ctx, v % 2 ? "قائمة الضيوف" : "المدعوين؟", 0, 0, "700 46px 'HF Cairo'", "#2a3550"); ctx.restore();
+          for (let r = 0; r < 12; r++) {
+            const y = 120 + 46 * r + 22, nm = NAMES[(r + v * 3) % NAMES.length];
+            ctx.save(); ctx.translate(w - 80, y); ctx.rotate((rnd() - 0.5) * 0.06);
+            text(ctx, nm, 0, 0, "400 32px 'HF Cairo'", "#24304a", "right");
+            const tw = ctx.measureText(nm).width;
+            if (rnd() > 0.62) { ctx.strokeStyle = "#b03030"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(4, -2); ctx.lineTo(-tw - 6, 4); ctx.stroke(); }
+            if (rnd() > 0.7) text(ctx, "؟", -tw - 40, 0, "700 34px 'HF Cairo'", "#b03030");
+            ctx.restore();
+          }
+          ctx.strokeStyle = "rgba(40,50,80,0.5)"; ctx.lineWidth = 2;
+          ctx.beginPath(); for (let k = 0; k < 14; k++) ctx.lineTo(60 + rnd() * 160, 520 + rnd() * 140); ctx.stroke();
+        });
+        const ctx = noteCanvas.getContext("2d");
+        ctx.fillStyle = "#f3d65a"; ctx.fillRect(0, 0, 256, 256);
+        text(ctx, "اتصل بخالد!", 128, 100, "700 34px 'HF Cairo'", "#3a3420");
+        text(ctx, "كم العدد؟", 128, 160, "400 30px 'HF Cairo'", "#3a3420");
+      }
+      function paintScreen(t) {
+        const ctx = screenCanvas.getContext("2d"), w = 600, h = 1280;
+        ctx.save(); ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, w, h); roundRect(ctx, 0, 0, w, h, 64); ctx.clip();
+        if (t < 9.9) {
+          ctx.fillStyle = C.beige; ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = C.olive; ctx.fillRect(0, 0, w, 190);
+          text(ctx, "دعوات الحفل", w / 2, 112, "700 40px 'HF Cairo'", "#ffffff");
+          text(ctx, "قائمة الضيوف", w / 2, 156, "400 24px 'HF Cairo'", "rgba(255,255,255,0.75)");
+          const p1 = clamp01((t - 8.15) / 0.4);
+          if (p1 > 0) {
+            const s = ease("back.out(1.6)")(p1);
+            ctx.save(); ctx.translate(570, 240); ctx.scale(s, s); ctx.globalAlpha = clamp01(p1 * 3);
+            ctx.fillStyle = "#dfe8c8"; roundRect(ctx, -330, 0, 330, 520, 26); ctx.fill();
+            ctx.drawImage(cardCanvas, -310, 20, 290, 399);
+            text(ctx, "بطاقة دعوتك للحفل", -165, 450, "700 26px 'HF Cairo'", C.ink);
+            ctx.strokeStyle = t >= 9.0 ? "#2f9be0" : "#8a8f7a"; ctx.lineWidth = 4; ctx.lineCap = "round";
+            if (t >= 8.6) { ctx.beginPath(); ctx.moveTo(-300, 494); ctx.lineTo(-292, 502); ctx.lineTo(-278, 484); ctx.stroke(); }
+            if (t >= 8.8) { ctx.beginPath(); ctx.moveTo(-288, 494); ctx.lineTo(-280, 502); ctx.lineTo(-266, 484); ctx.stroke(); }
+            ctx.restore();
+          }
+        } else {
+          ctx.fillStyle = C.ivory; ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = C.olive; ctx.fillRect(0, 0, w, 190);
+          text(ctx, "قائمة الضيوف", w / 2, 100, "700 40px 'HF Cairo'", "#ffffff");
+          const rows = 8, done = [10.25, 10.55, 10.85, 11.15, 11.45, 11.75, 12.05, 99];
+          const count = done.filter((d) => t >= d).length;
+          text(ctx, "حضر " + count.toLocaleString("ar-EG") + " من " + rows.toLocaleString("ar-EG"), w / 2, 152, "400 26px 'HF Cairo'", "rgba(255,255,255,0.85)");
+          for (let r = 0; r < rows; r++) {
+            const y = 230 + r * 120;
+            ctx.fillStyle = "#ffffff"; roundRect(ctx, 30, y, w - 60, 100, 20); ctx.fill();
+            text(ctx, NAMES[r], w - 70, y + 50, "700 32px 'HF Cairo'", C.ink, "right");
+            const p = clamp01((t - done[r]) / 0.25);
+            if (p > 0) {
+              const s = ease("back.out(2)")(p);
+              ctx.save(); ctx.translate(100, y + 50); ctx.scale(s, s);
+              ctx.fillStyle = "#3fae5a"; ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.fill();
+              ctx.strokeStyle = "#fff"; ctx.lineWidth = 6; ctx.lineCap = "round"; ctx.lineJoin = "round";
+              ctx.beginPath(); ctx.moveTo(-13, 1); ctx.lineTo(-3, 11); ctx.lineTo(14, -10); ctx.stroke(); ctx.restore();
+            } else {
+              ctx.strokeStyle = "#cfcab8"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(100, y + 50, 28, 0, Math.PI * 2); ctx.stroke();
+            }
+          }
+        }
+        ctx.restore();
+      }
+
+      // ---------- renderer ----------
+      const canvas = document.getElementById("ba-canvas");
+      const divider = document.getElementById("ba-divider");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+      renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.autoClear = false;
+      const texOf = (cv) => { const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; };
+
+      // ---------- BEFORE world (cold, messy desk) ----------
+      const before = new THREE.Scene();
+      before.background = new THREE.Color("#22252a");
+      before.fog = new THREE.Fog("#22252a", 8, 18);
+      const camB = new THREE.PerspectiveCamera(35, W / H, 0.1, 60);
+      before.add(new THREE.HemisphereLight(0xdfe6f0, 0x2a2c30, 0.6));
+      const keyB = new THREE.DirectionalLight(0xf2f5ff, 2.0);
+      keyB.position.set(-3, 7, 3); keyB.castShadow = true; keyB.shadow.mapSize.set(1024, 1024);
+      Object.assign(keyB.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: 0.5, far: 20 }); keyB.shadow.bias = -0.0006;
+      before.add(keyB);
+      const deskB = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x3b3d42, roughness: 0.85 }));
+      deskB.rotation.x = -Math.PI / 2; deskB.receiveShadow = true; before.add(deskB);
+      const mug = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.2, 0.42, 28), new THREE.MeshStandardMaterial({ color: 0x9a9fa8, roughness: 0.4 }));
+      mug.position.set(1.55, 0.21, -0.9); mug.castShadow = true; before.add(mug);
+      const pen = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.9, 12), new THREE.MeshStandardMaterial({ color: 0x1d3f8a, roughness: 0.4 }));
+      pen.rotation.set(0, 0.6, Math.PI / 2); pen.position.set(-1.25, 0.03, 0.9); pen.castShadow = true; before.add(pen);
+
+      const paperMats = paperCanvases.map((cv) => new THREE.MeshStandardMaterial({ map: texOf(cv), roughness: 0.9, side: THREE.DoubleSide }));
+      const noteMat = new THREE.MeshStandardMaterial({ map: texOf(noteCanvas), roughness: 0.8, side: THREE.DoubleSide });
+      const paperGeo = new THREE.PlaneGeometry(0.78, 1.07), noteGeo = new THREE.PlaneGeometry(0.42, 0.42);
+      const PAPERS = 46, rndP = mulberry32(77), papers = [];
+      for (let i = 0; i < PAPERS; i++) {
+        const isNote = i % 7 === 3;
+        const m = new THREE.Mesh(isNote ? noteGeo : paperGeo, isNote ? noteMat : paperMats[i % 4]);
+        m.castShadow = true; m.receiveShadow = true; before.add(m);
+        papers.push({
+          m, s: -2.4 + i * 0.32 + rndP() * 0.12,
+          rest: [(rndP() - 0.5) * 2.4, 0.004 + i * 0.0035, (rndP() - 0.5) * 1.7], ry: rndP() * Math.PI * 2,
+          from: [(rndP() - 0.5) * 4, 3.4 + rndP(), (rndP() - 0.5) * 2], spin: (rndP() - 0.5) * 9, ph: rndP() * 6.28,
+          wind: [3 + rndP() * 4, 0.6 + rndP() * 1.6, (rndP() - 0.5) * 2],
+        });
+      }
+
+      // ---------- AFTER world (warm, orderly) ----------
+      const after = new THREE.Scene();
+      after.background = new THREE.Color("#1b220f");
+      after.fog = new THREE.Fog("#1b220f", 9, 20);
+      const camA = new THREE.PerspectiveCamera(35, W / H, 0.1, 60);
+      after.add(new THREE.HemisphereLight(0xfff1d6, 0x1a2010, 0.55));
+      const keyA = new THREE.DirectionalLight(0xffe2b0, 2.3);
+      keyA.position.set(4, 7, 5); keyA.castShadow = true; keyA.shadow.mapSize.set(1024, 1024);
+      Object.assign(keyA.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: 0.5, far: 25 }); keyA.shadow.bias = -0.0006;
+      after.add(keyA);
+      const rimA = new THREE.DirectionalLight(0xa9c4ff, 1.1); rimA.position.set(-5, 3, -4); after.add(rimA);
+      const deskA = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x29331a, roughness: 0.8 }));
+      deskA.rotation.x = -Math.PI / 2; deskA.receiveShadow = true; after.add(deskA);
+
+      const cardTex = texOf(cardCanvas), backTex = texOf(backCanvas);
+      const goldMat = new THREE.MeshStandardMaterial({ color: 0xd4af5a, metalness: 0.85, roughness: 0.35, transparent: true });
+      const frontMat = new THREE.MeshStandardMaterial({ map: cardTex, roughness: 0.55, transparent: true });
+      const backMat = new THREE.MeshStandardMaterial({ map: backTex, roughness: 0.5, transparent: true });
+      const cardGeo = new THREE.BoxGeometry(1.6, 2.2, 0.035);
+      const CARD_S = 0.42, cards = [];
+      const grid = [[0.78, -0.55], [0, -0.55], [-0.78, -0.55], [0.78, 0.5], [0, 0.5], [-0.78, 0.5]];
+      grid.forEach((g, j) => {
+        const mats = j === 4 ? [goldMat.clone(), goldMat.clone(), goldMat.clone(), goldMat.clone(), frontMat.clone(), backMat.clone()] : [goldMat, goldMat, goldMat, goldMat, frontMat, backMat];
+        const m = new THREE.Mesh(cardGeo, mats); m.castShadow = true; m.receiveShadow = true; after.add(m);
+        cards.push({ m, mats, g, land: 4.65 + j * 0.2 });
+      });
+
+      const shape = new THREE.Shape();
+      (function () {
+        const w = 1.05, h = 2.15, r = 0.15, x = -w / 2, y = -h / 2;
+        shape.moveTo(x + r, y); shape.lineTo(x + w - r, y); shape.quadraticCurveTo(x + w, y, x + w, y + r);
+        shape.lineTo(x + w, y + h - r); shape.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        shape.lineTo(x + r, y + h); shape.quadraticCurveTo(x, y + h, x, y + h - r); shape.lineTo(x, y + r); shape.quadraticCurveTo(x, y, x + r, y);
+      })();
+      const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.07, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 3, curveSegments: 16 });
+      bodyGeo.center();
+      const phone = new THREE.Group();
+      const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({ color: 0x1c1d1f, metalness: 0.7, roughness: 0.4 }));
+      body.castShadow = true; phone.add(body);
+      const screenTex = texOf(screenCanvas);
+      const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.98, 2.09), new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false }));
+      screen.position.z = 0.051; phone.add(screen);
+      phone.scale.setScalar(0.62);
+      after.add(phone);
+
+      // ---------- choreography ----------
+      const split = track([[0, 0], [3.55, 0], [4.35, 960, "power3.inOut"], [12.45, 960], [13.35, 1920, "power2.inOut"]]);
+      const camBpos = track([[0, [-1.55, 4.1, 4.9]], [3.5, [-1.7, 3.9, 4.6], "sine.inOut"], [13.4, [-1.85, 3.7, 4.4], "sine.inOut"]]);
+      const camBtgt = track([[0, [-1.55, 0.05, 0]], [3.5, [-1.7, 0.05, 0], "sine.inOut"], [13.4, [-1.85, 0.05, 0], "sine.inOut"]]);
+      const camApos = track([[0, [1.75, 3.7, 5.1]], [12.4, [1.6, 3.5, 4.9], "sine.inOut"], [14.6, [1.2, 2.9, 4.6], "power2.inOut"], [20, [1.05, 2.8, 4.4], "none"]]);
+      const camAtgt = track([[0, [1.75, 0.35, 0.2]], [12.4, [1.6, 0.35, 0.2], "sine.inOut"], [14.6, [1.2, 0.45, 0.25], "power2.inOut"], [20, [1.1, 0.45, 0.25], "none"]]);
+      const phonePos = track([[0, [0.45, -2.2, 1.0]], [7.15, [0.45, -2.2, 1.0]], [7.85, [0.45, 0.72, 1.0], "expo.out"]]);
+      const phoneRx = track([[0, -0.1], [7.15, -0.1], [7.85, -0.32, "expo.out"]]);
+      const phoneRy = track([[0, 0.25], [7.15, 0.25], [7.85, -0.12, "expo.out"], [12.4, -0.08, "sine.inOut"], [14.6, -0.22, "power2.inOut"]]);
+
+      function placeCard(c, t) {
+        const [gx, gz] = c.g;
+        const u = clamp01((t - c.land) / 0.6), e = ease("expo.out")(u);
+        c.m.visible = t >= c.land;
+        c.m.position.set(gx, lerp(1.4, 0.02, e), gz);
+        c.m.rotation.set(-Math.PI / 2 + lerp(0.9, 0, e), 0, lerp(0.5 * (c.g[0] >= 0 ? 1 : -1), 0, e));
+        c.m.scale.setScalar(CARD_S);
+      }
+
+      function renderAt(t) {
+        t = Math.max(0, Math.min(DUR, t));
+        // BEFORE
+        const shake = t < 12.45 ? 0.012 : 0;
+        const bp = camBpos(t), bt = camBtgt(t);
+        camB.position.set(bp[0] + Math.sin(t * 13.1) * shake, bp[1] + Math.sin(t * 11.7 + 1) * shake, bp[2]);
+        camB.lookAt(bt[0], bt[1], bt[2]);
+        for (const p of papers) {
+          const tau = t - p.s;
+          if (tau <= 0) { p.m.visible = false; continue; }
+          p.m.visible = true;
+          const u = clamp01(tau / 0.85), eh = ease("power2.out")(u), ev = ease("power2.in")(u), fl = (1 - u) * 0.35;
+          let x = lerp(p.from[0], p.rest[0], eh) + Math.sin(tau * 9 + p.ph) * fl;
+          let y = lerp(p.from[1], p.rest[1], ev);
+          let z = lerp(p.from[2], p.rest[2], eh) + Math.cos(tau * 7 + p.ph) * fl * 0.6;
+          let rx = -Math.PI / 2 + (1 - u) * p.spin * 0.4, ry = p.ry + (1 - u) * p.spin, rz = (1 - u) * 0.8;
+          const b = ease("power3.in")(clamp01((t - 12.45 - (p.rest[0] + 1.2) * 0.08) / 0.9));
+          if (b > 0) { x += p.wind[0] * b; y += p.wind[1] * b; z += p.wind[2] * b; rx += b * 3; rz += b * 2; }
+          p.m.position.set(x, y, z); p.m.rotation.set(rx, ry, rz, "YXZ");
+        }
+        // AFTER
+        const ap = camApos(t), at = camAtgt(t);
+        camA.position.set(ap[0], ap[1], ap[2]); camA.lookAt(at[0], at[1], at[2]);
+        cards.forEach((c) => placeCard(c, t));
+        // card 4 (front centre) flies into the phone
+        const hero = cards[4], fly = clamp01((t - 7.6) / 0.6);
+        if (fly > 0) {
+          const e = ease("power3.inOut")(fly), pp = phonePos(t);
+          hero.m.position.set(lerp(hero.g[0], pp[0], e), lerp(0.02, pp[1] + 0.35, e), lerp(hero.g[1], pp[2] + 0.08, e));
+          hero.m.rotation.set(lerp(-Math.PI / 2, -0.32, e), lerp(0, -0.12, e), 0);
+          hero.m.scale.setScalar(lerp(CARD_S, 0.12, e));
+          const op = 1 - clamp01((t - 8.05) / 0.15);
+          hero.mats.forEach((m) => (m.opacity = op));
+          hero.m.visible = op > 0.001;
+        }
+        const pp = phonePos(t);
+        phone.visible = t >= 7.15;
+        phone.position.set(pp[0], pp[1], pp[2]);
+        phone.rotation.set(phoneRx(t), phoneRy(t), 0, "YXZ");
+        if (phone.visible) { paintScreen(t); screenTex.needsUpdate = true; }
+
+        // composite: after on the left of the split, before on the right
+        const sx = Math.round(split(t));
+        renderer.setScissorTest(true);
+        renderer.setViewport(0, 0, W, H);
+        if (sx > 0) { renderer.setScissor(0, 0, sx, H); renderer.clear(); renderer.render(after, camA); }
+        if (sx < W) { renderer.setScissor(sx, 0, W - sx, H); renderer.clear(); renderer.render(before, camB); }
+        renderer.setScissorTest(false);
+        divider.style.transform = "translateX(" + sx + "px)";
+        divider.style.opacity = sx > 0 && sx < W ? 1 : 0;
+      }
+
+      let ready = false;
+      const build = Promise.all([
+        document.fonts.load("700 100px 'HF Amiri'"), document.fonts.load("400 40px 'HF Cairo'"),
+        document.fonts.load("700 40px 'HF Cairo'"), document.fonts.load("800 40px 'HF Cairo'"),
+      ]).then(() => {
+        paintCard(); paintBack(); paintPapers();
+        renderer.initTexture && [cardTex, backTex].forEach((t) => (t.needsUpdate = true));
+        paperMats.forEach((m) => (m.map.needsUpdate = true)); noteMat.map.needsUpdate = true;
+        ready = true; renderAt(0);
+        const gl = renderer.getContext(), px = new Uint8Array(4);
+        gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      });
+      window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["stage"] = build;
+      window.addEventListener("hf-seek", (e) => { if (ready && e && e.detail) renderAt(e.detail.time); });
+      const proxy = { t: 0 }, tl = gsap.timeline({ paused: true });
+      tl.fromTo(proxy, { t: 0 }, { t: DUR, duration: DUR, ease: "none", onUpdate: () => { if (ready) renderAt(proxy.t); } }, 0);
+      window.__timelines["stage"] = tl;
+    })();
+  </script>
+</template>

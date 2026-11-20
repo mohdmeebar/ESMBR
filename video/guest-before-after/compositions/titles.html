@@ -1,0 +1,79 @@
+<template>
+  <style>
+    @font-face { font-family: "HF Amiri"; font-weight: 700; src: url("assets/fonts/amiri-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; direction: rtl; pointer-events: none; }
+    .big { font-family: "HF Amiri", serif; font-weight: 700; font-size: 100px; line-height: 1.25; color: #f6eedb; text-shadow: 0 4px 30px rgba(0,0,0,0.45); }
+    .small { font-family: "HF Cairo", sans-serif; font-weight: 400; font-size: 40px; line-height: 1.5; color: #e3c47a; margin-top: 16px; }
+    .w { display: inline-block; }
+    .gold { color: #e3c47a; }
+    .grey { color: #c5cad3; }
+    .badge {
+      position: absolute; top: 120px; padding: 10px 34px; border-radius: 999px;
+      font-family: "HF Cairo", sans-serif; font-weight: 700; font-size: 34px; line-height: 1.3;
+    }
+    .cap {
+      position: absolute; top: 868px; width: 860px; text-align: center;
+      font-family: "HF Cairo", sans-serif; font-weight: 700; font-size: 42px; line-height: 1.4; color: #f6eedb;
+      text-shadow: 0 3px 18px rgba(0,0,0,0.6);
+    }
+    .rule { width: 140px; height: 3px; background: #d4af5a; margin: 26px 0 0 auto; transform-origin: right center; }
+    #tb-hook { position: absolute; left: 150px; top: 50%; width: 740px; transform: translateY(-50%); text-align: right; }
+    #tb-end { position: absolute; right: 190px; top: 50%; width: 780px; transform: translateY(-50%); text-align: right; }
+    #tb-end-icon { width: 120px; height: 120px; border-radius: 28px; display: block; margin: 0 0 26px auto; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+  </style>
+  <div id="root" data-composition-id="titles" data-width="1920" data-height="1080">
+    <!-- the old way, full frame -->
+    <div id="tb-hook" class="clip" data-start="0.3" data-duration="3.2">
+      <div id="tb-hook-k" class="small grey" style="margin-bottom: 22px;">قبل</div>
+      <div id="tb-hook-title" class="big"><span class="w">أوراق</span> <span class="w">وقوائم</span> <span class="w grey">متفرقة</span></div>
+      <div id="tb-hook-sub" class="small grey">أسماء ضائعة ودعوات بلا متابعة</div>
+    </div>
+
+    <!-- split screen -->
+    <div id="tb-badge-before" class="badge clip" data-start="4.2" data-duration="8.25" style="right: 410px; background: rgba(60,64,72,0.85); color: #dfe3ea;">قبل</div>
+    <div id="tb-badge-after" class="badge clip" data-start="4.3" data-duration="8.15" style="left: 410px; background: #4a5e2a; color: #f6eedb; border: 2px solid #d4af5a;">بعد</div>
+    <div id="tb-cap-before" class="cap clip" data-start="4.5" data-duration="7.95" style="left: 1010px;">قوائم ورقية وأسماء ضائعة</div>
+    <div id="tb-cap-a1" class="cap clip" data-start="4.6" data-duration="2.55" style="left: 50px;">بطاقة دعوة جاهزة لكل ضيف</div>
+    <div id="tb-cap-a2" class="cap clip" data-start="7.3" data-duration="2.55" style="left: 50px;">تُرسل عبر واتساب برمز QR</div>
+    <div id="tb-cap-a3" class="cap clip" data-start="10.0" data-duration="2.45" style="left: 50px;">الحضور يُسجَّل لحظياً</div>
+
+    <!-- end card -->
+    <div id="tb-end" class="clip" data-start="13.9" data-duration="6.1">
+      <img id="tb-end-icon" src="assets/app-icon.png" alt="" />
+      <div id="tb-end-title" class="big"><span class="w">إدارة</span> <span class="w">ضيوف</span> <span class="w gold">الحفل</span></div>
+      <div id="tb-end-sub" class="small">بطاقات الدعوة · رموز QR · تسجيل الحضور</div>
+      <div id="tb-end-rule" class="rule"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const wordsIn = (sel, at, gap) => tl.fromTo(sel + " .w", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out", stagger: gap || 0.09 }, at);
+      const lineIn = (sel, at) => tl.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.28, ease: "power3.out" }, at);
+      const out = (sel, at) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in", immediateRender: false }, at);
+      const pop = (sel, at) => tl.fromTo(sel, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, at);
+
+      lineIn("#tb-hook-k", 0.3);
+      wordsIn("#tb-hook-title", 0.45, 0.1);
+      lineIn("#tb-hook-sub", 1.0);
+      out("#tb-hook > *", 3.25);
+
+      // badges and captions live inside .clip wrappers: animate opacity only
+      pop("#tb-badge-before", 4.2); out("#tb-badge-before", 12.2);
+      pop("#tb-badge-after", 4.3); out("#tb-badge-after", 12.2);
+      lineIn("#tb-cap-before", 4.5); out("#tb-cap-before", 12.2);
+      lineIn("#tb-cap-a1", 4.6); out("#tb-cap-a1", 6.9);
+      lineIn("#tb-cap-a2", 7.3); out("#tb-cap-a2", 9.6);
+      lineIn("#tb-cap-a3", 10.0); out("#tb-cap-a3", 12.2);
+
+      tl.fromTo("#tb-end-icon", { opacity: 0, scale: 0.7, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "back.out(1.5)" }, 13.95);
+      wordsIn("#tb-end-title", 14.2, 0.1);
+      lineIn("#tb-end-sub", 14.6);
+      tl.fromTo("#tb-end-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "expo.out" }, 14.8);
+
+      window.__timelines["titles"] = tl;
+    })();
+  </script>
+</template>
