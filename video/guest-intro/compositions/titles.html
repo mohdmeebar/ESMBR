@@ -1,0 +1,104 @@
+<template>
+  <style>
+    @font-face { font-family: "HF Amiri"; font-weight: 700; src: url("assets/fonts/amiri-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; direction: rtl; pointer-events: none; }
+    .block {
+      position: absolute; right: 190px; top: 50%; width: 780px;
+      transform: translateY(-50%); text-align: right; direction: rtl;
+    }
+    .big {
+      font-family: "HF Amiri", serif; font-weight: 700; font-size: 104px; line-height: 1.25;
+      color: #f6eedb; text-shadow: 0 4px 30px rgba(0, 0, 0, 0.35);
+    }
+    .small {
+      font-family: "HF Cairo", sans-serif; font-weight: 400; font-size: 40px; line-height: 1.5;
+      color: #e3c47a; margin-top: 18px;
+    }
+    .kicker {
+      font-family: "HF Cairo", sans-serif; font-weight: 700; font-size: 28px; letter-spacing: 0;
+      color: #e3c47a; margin-bottom: 10px;
+    }
+    .w { display: inline-block; }
+    .gold { color: #e3c47a; }
+    .rule { width: 140px; height: 3px; background: #d4af5a; margin: 26px 0 0 auto; transform-origin: right center; }
+    #ti-end-icon { width: 120px; height: 120px; border-radius: 28px; display: block; margin: 0 0 26px auto; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+  </style>
+  <div id="root" data-composition-id="titles" data-width="1920" data-height="1080">
+    <!-- hook -->
+    <div id="ti-hook" class="block clip" data-start="0.25" data-duration="3.15">
+      <div id="ti-hook-title" class="big"><span class="w">إدارة</span> <span class="w">ضيوف</span> <span class="w gold">الحفل</span></div>
+      <div id="ti-hook-sub" class="small">من بطاقة الدعوة حتى باب القاعة</div>
+      <div id="ti-hook-rule" class="rule"></div>
+    </div>
+    <!-- send -->
+    <div id="ti-send" class="block clip" data-start="4.6" data-duration="2.75">
+      <div id="ti-send-k" class="kicker">١ · الدعوة</div>
+      <div id="ti-send-title" class="big"><span class="w">أرسل</span> <span class="w gold">الدعوة</span></div>
+      <div id="ti-send-sub" class="small">بطاقة لكل ضيف عبر واتساب</div>
+    </div>
+    <!-- scan -->
+    <div id="ti-scan" class="block clip" data-start="8.75" data-duration="2.7">
+      <div id="ti-scan-k" class="kicker">٢ · الدخول</div>
+      <div id="ti-scan-title" class="big"><span class="w">امسح</span> <span class="w">عند</span> <span class="w gold">الباب</span></div>
+      <div id="ti-scan-sub" class="small">رمز QR خاص بكل ضيف</div>
+    </div>
+    <!-- done -->
+    <div id="ti-done" class="block clip" data-start="11.9" data-duration="2.5">
+      <div id="ti-done-k" class="kicker">٣ · الحضور</div>
+      <div id="ti-done-title" class="big"><span class="w">تم</span> <span class="w">تسجيل</span> <span class="w gold">الحضور</span></div>
+      <div id="ti-done-sub" class="small">يظهر لحظياً في قائمة الضيوف</div>
+    </div>
+    <!-- end card -->
+    <div id="ti-end" class="block clip" data-start="15.3" data-duration="4.7">
+      <img id="ti-end-icon" src="assets/app-icon.png" alt="" />
+      <div id="ti-end-title" class="big"><span class="w">إدارة</span> <span class="w">ضيوف</span> <span class="w gold">الحفل</span></div>
+      <div id="ti-end-sub" class="small">بطاقات الدعوة · رموز QR · تسجيل الحضور</div>
+      <div id="ti-end-rule" class="rule"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const wordsIn = (sel, at, gap) => {
+        tl.fromTo(sel + " .w", { opacity: 0, filter: "blur(8px)" },
+          { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out", stagger: gap || 0.09 }, at);
+      };
+      const lineIn = (sel, at) => tl.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.28, ease: "power3.out" }, at);
+      const blockOut = (sel, at) => tl.fromTo(sel + " > *", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in", immediateRender: false }, at);
+
+      // hook 0.25 – 3.4
+      wordsIn("#ti-hook-title", 0.3, 0.1);
+      lineIn("#ti-hook-sub", 0.85);
+      tl.fromTo("#ti-hook-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 1.0);
+      blockOut("#ti-hook", 3.1);
+
+      // send 4.6 – 7.35
+      lineIn("#ti-send-k", 4.65);
+      wordsIn("#ti-send-title", 4.75);
+      lineIn("#ti-send-sub", 5.05);
+      blockOut("#ti-send", 7.05);
+
+      // scan 8.75 – 11.45
+      lineIn("#ti-scan-k", 8.8);
+      wordsIn("#ti-scan-title", 8.9);
+      lineIn("#ti-scan-sub", 9.2);
+      blockOut("#ti-scan", 11.15);
+
+      // done 11.9 – 14.4
+      lineIn("#ti-done-k", 11.95);
+      wordsIn("#ti-done-title", 12.05);
+      lineIn("#ti-done-sub", 12.35);
+      blockOut("#ti-done", 14.1);
+
+      // end 15.3 – 20
+      tl.fromTo("#ti-end-icon", { opacity: 0, scale: 0.7, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "back.out(1.5)" }, 15.35);
+      wordsIn("#ti-end-title", 15.6, 0.1);
+      lineIn("#ti-end-sub", 16.0);
+      tl.fromTo("#ti-end-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "expo.out" }, 16.2);
+
+      window.__timelines["titles"] = tl;
+    })();
+  </script>
+</template>

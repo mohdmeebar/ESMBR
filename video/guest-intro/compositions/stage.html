@@ -1,0 +1,440 @@
+<template>
+  <style>
+    @font-face { font-family: "HF Amiri"; font-weight: 700; src: url("assets/fonts/amiri-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; background: #1b220f; }
+    #stage-canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+    #stage-fontprobe { position: absolute; left: -9999px; top: 0; font-family: "HF Amiri", "HF Cairo"; }
+  </style>
+  <div id="root" data-composition-id="stage" data-width="1920" data-height="1080" data-layout-ignore>
+    <canvas id="stage-canvas" width="1920" height="1080"></canvas>
+    <span id="stage-fontprobe">ا</span>
+  </div>
+  <script>
+    (function () {
+      const DUR = 20;
+      const W = 1920, H = 1080;
+      const C = {
+        olive: "#4a5e2a", oliveLight: "#5f7a32", ivory: "#f7f1e3", beige: "#efe8d8",
+        gold: "#b8913a", goldLight: "#e3c47a", ink: "#2b2f1f", green: "#5fd47a",
+      };
+
+      // ---------- helpers ----------
+      function mulberry32(a) {
+        return function () {
+          a |= 0; a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const clamp01 = (x) => Math.max(0, Math.min(1, x));
+      const easeCache = {};
+      const ease = (name) => easeCache[name] || (easeCache[name] = gsap.parseEase(name || "none"));
+      // keys: [[time, value(number|array), easeIntoThisKey]]
+      function track(keys) {
+        return function (t) {
+          if (t <= keys[0][0]) return keys[0][1];
+          for (let i = 0; i < keys.length - 1; i++) {
+            const a = keys[i], b = keys[i + 1];
+            if (t < b[0]) {
+              const p = ease(b[2])((t - a[0]) / (b[0] - a[0]));
+              if (Array.isArray(a[1])) return a[1].map((v, j) => v + (b[1][j] - v) * p);
+              return a[1] + (b[1] - a[1]) * p;
+            }
+          }
+          return keys[keys.length - 1][1];
+        };
+      }
+      function roundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+      }
+      function drawQR(ctx, x, y, size, seed, color, bg) {
+        const N = 25, m = size / N, rnd = mulberry32(seed);
+        ctx.fillStyle = bg; ctx.fillRect(x - m, y - m, size + 2 * m, size + 2 * m);
+        ctx.fillStyle = color;
+        const finder = (fx, fy) => {
+          ctx.fillRect(x + fx * m, y + fy * m, 7 * m, 7 * m);
+          ctx.fillStyle = bg; ctx.fillRect(x + (fx + 1) * m, y + (fy + 1) * m, 5 * m, 5 * m);
+          ctx.fillStyle = color; ctx.fillRect(x + (fx + 2) * m, y + (fy + 2) * m, 3 * m, 3 * m);
+        };
+        const inFinder = (i, j) => (i < 8 && j < 8) || (i > N - 9 && j < 8) || (i < 8 && j > N - 9);
+        for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+          const r = rnd();
+          if (!inFinder(i, j) && r > 0.52) ctx.fillRect(x + i * m, y + j * m, Math.ceil(m), Math.ceil(m));
+        }
+        finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
+      }
+      function text(ctx, str, x, y, font, color, align) {
+        ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align || "center";
+        ctx.direction = "rtl"; ctx.textBaseline = "middle"; ctx.fillText(str, x, y);
+      }
+
+      // ---------- textures ----------
+      const cardCanvas = document.createElement("canvas");
+      cardCanvas.width = 1024; cardCanvas.height = 1408;
+      const backCanvas = document.createElement("canvas");
+      backCanvas.width = 512; backCanvas.height = 704;
+      const screenCanvas = document.createElement("canvas");
+      screenCanvas.width = 600; screenCanvas.height = 1280;
+
+      function paintCard() {
+        const ctx = cardCanvas.getContext("2d"), w = 1024, h = 1408;
+        const g = ctx.createLinearGradient(0, 0, w, h);
+        g.addColorStop(0, "#fbf6ea"); g.addColorStop(1, "#efe4c9");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = C.gold; ctx.lineWidth = 6; ctx.strokeRect(44, 44, w - 88, h - 88);
+        ctx.lineWidth = 2; ctx.strokeRect(64, 64, w - 128, h - 128);
+        // ornament
+        ctx.save(); ctx.translate(w / 2, 150); ctx.rotate(Math.PI / 4);
+        ctx.fillStyle = C.gold; ctx.fillRect(-16, -16, 32, 32); ctx.restore();
+        ctx.fillStyle = C.gold; ctx.fillRect(w / 2 - 190, 148, 150, 3); ctx.fillRect(w / 2 + 40, 148, 150, 3);
+        text(ctx, "دعوة", w / 2, 300, "700 170px 'HF Amiri'", C.gold);
+        text(ctx, "نتشرف بدعوتكم لحضور الحفل", w / 2, 450, "400 50px 'HF Cairo'", C.olive);
+        text(ctx, "ضيفنا الكريم", w / 2, 530, "700 46px 'HF Cairo'", C.ink);
+        drawQR(ctx, w / 2 - 220, 640, 440, 7, C.olive, "#fbf6ea");
+        text(ctx, "اعرض الرمز عند الدخول", w / 2, 1180, "400 40px 'HF Cairo'", C.olive);
+        ctx.fillStyle = C.gold; ctx.fillRect(w / 2 - 120, 1260, 240, 3);
+      }
+      function paintBack() {
+        const ctx = backCanvas.getContext("2d"), w = 512, h = 704;
+        ctx.fillStyle = C.olive; ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(227,196,122,0.35)"; ctx.lineWidth = 2;
+        for (let k = -h; k < w + h; k += 40) {
+          ctx.beginPath(); ctx.moveTo(k, 0); ctx.lineTo(k + h, h); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(k, h); ctx.lineTo(k + h, 0); ctx.stroke();
+        }
+        ctx.strokeStyle = C.goldLight; ctx.lineWidth = 4; ctx.strokeRect(24, 24, w - 48, h - 48);
+        ctx.fillStyle = C.olive; ctx.beginPath(); ctx.arc(w / 2, h / 2, 90, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = C.goldLight; ctx.lineWidth = 4; ctx.stroke();
+        text(ctx, "حفل", w / 2, h / 2 + 4, "700 72px 'HF Amiri'", C.goldLight);
+      }
+
+      function paintScreen(t) {
+        const ctx = screenCanvas.getContext("2d"), w = 600, h = 1280;
+        ctx.save();
+        ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, w, h);
+        roundRect(ctx, 0, 0, w, h, 64); ctx.clip();
+        if (t < 8.0) {
+          // chat
+          ctx.fillStyle = C.beige; ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = "rgba(74,94,42,0.06)";
+          for (let yy = 220; yy < h; yy += 60) for (let xx = (yy / 60) % 2 ? 0 : 30; xx < w; xx += 60) {
+            ctx.beginPath(); ctx.arc(xx, yy, 6, 0, Math.PI * 2); ctx.fill();
+          }
+          ctx.fillStyle = C.olive; ctx.fillRect(0, 0, w, 190);
+          text(ctx, "٩:٤١", 520, 50, "700 26px 'HF Cairo'", "#ffffff");
+          text(ctx, "دعوات الحفل", w / 2, 112, "700 40px 'HF Cairo'", "#ffffff");
+          text(ctx, "قائمة الضيوف", w / 2, 156, "400 24px 'HF Cairo'", "rgba(255,255,255,0.75)");
+          // bubble 1 (outgoing)
+          const p1 = clamp01((t - 4.45) / 0.4);
+          if (p1 > 0) {
+            const s = ease("back.out(1.6)")(p1);
+            ctx.save(); ctx.translate(570, 230); ctx.scale(s, s); ctx.globalAlpha = clamp01(p1 * 3);
+            ctx.fillStyle = "#dfe8c8"; roundRect(ctx, -330, 0, 330, 520, 26); ctx.fill();
+            ctx.drawImage(cardCanvas, -310, 20, 290, 399);
+            text(ctx, "بطاقة دعوتك للحفل", -165, 450, "700 26px 'HF Cairo'", C.ink);
+            text(ctx, "٨:٣٠", -60, 494, "400 20px 'HF Cairo'", "#6b705c");
+            // ticks
+            const tickCol = t >= 6.3 ? "#2f9be0" : "#8a8f7a";
+            ctx.strokeStyle = tickCol; ctx.lineWidth = 4; ctx.lineCap = "round";
+            if (t >= 5.3) { ctx.beginPath(); ctx.moveTo(-300, 494); ctx.lineTo(-292, 502); ctx.lineTo(-278, 484); ctx.stroke(); }
+            if (t >= 5.8) { ctx.beginPath(); ctx.moveTo(-288, 494); ctx.lineTo(-280, 502); ctx.lineTo(-266, 484); ctx.stroke(); }
+            ctx.restore();
+          }
+          // bubble 2 (incoming)
+          const p2 = clamp01((t - 6.6) / 0.4);
+          if (p2 > 0) {
+            const s = ease("back.out(1.6)")(p2);
+            ctx.save(); ctx.translate(30, 790); ctx.scale(s, s); ctx.globalAlpha = clamp01(p2 * 3);
+            ctx.fillStyle = "#ffffff"; roundRect(ctx, 0, 0, 380, 96, 26); ctx.fill();
+            text(ctx, "سأحضر بإذن الله، شكراً!", 190, 48, "700 26px 'HF Cairo'", C.ink);
+            ctx.restore();
+          }
+          ctx.fillStyle = "#ffffff"; roundRect(ctx, 24, h - 110, w - 48, 76, 38); ctx.fill();
+          text(ctx, "اكتب رسالة", w - 70, h - 72, "400 24px 'HF Cairo'", "#a0a490", "right");
+        } else if (t < 11.55) {
+          // entry pass with scanner
+          ctx.fillStyle = C.ivory; ctx.fillRect(0, 0, w, h);
+          text(ctx, "بطاقة الدخول", w / 2, 170, "700 60px 'HF Amiri'", C.olive);
+          text(ctx, "ضيفنا الكريم", w / 2, 240, "400 30px 'HF Cairo'", C.ink);
+          drawQR(ctx, 80, 340, 440, 7, C.olive, C.ivory);
+          // brackets
+          ctx.strokeStyle = C.gold; ctx.lineWidth = 8; ctx.lineCap = "square";
+          const B = [[50, 310, 1, 1], [550, 310, -1, 1], [50, 810, 1, -1], [550, 810, -1, -1]];
+          B.forEach(([bx, by, dx, dy]) => {
+            ctx.beginPath(); ctx.moveTo(bx, by + dy * 60); ctx.lineTo(bx, by); ctx.lineTo(bx + dx * 60, by); ctx.stroke();
+          });
+          text(ctx, "اعرض الرمز عند الدخول", w / 2, 920, "400 30px 'HF Cairo'", C.olive);
+          if (t >= 8.9 && t < 11.45) {
+            const sy = 340 + 440 * (0.5 - 0.5 * Math.cos((Math.PI * (t - 8.9)) / 1.25));
+            const gg = ctx.createLinearGradient(0, sy - 40, 0, sy + 40);
+            gg.addColorStop(0, "rgba(95,212,122,0)"); gg.addColorStop(0.5, "rgba(95,212,122,0.55)"); gg.addColorStop(1, "rgba(95,212,122,0)");
+            ctx.fillStyle = gg; ctx.fillRect(50, sy - 40, 500, 80);
+            ctx.fillStyle = "#3fdc6a"; ctx.fillRect(50, sy - 3, 500, 6);
+          }
+        } else {
+          // success
+          const g = ctx.createLinearGradient(0, 0, 0, h);
+          g.addColorStop(0, C.oliveLight); g.addColorStop(1, C.olive);
+          ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+          const pc = ease("power3.out")(clamp01((t - 11.6) / 0.5));
+          const pk = ease("power2.out")(clamp01((t - 11.95) / 0.35));
+          ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 18; ctx.lineCap = "round"; ctx.lineJoin = "round";
+          ctx.beginPath(); ctx.arc(w / 2, 520, 170, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pc); ctx.stroke();
+          if (pk > 0) {
+            const pts = [[w / 2 - 80, 525], [w / 2 - 20, 585], [w / 2 + 90, 455]];
+            const L1 = Math.hypot(60, 60), L2 = Math.hypot(110, 130), L = (L1 + L2) * pk;
+            ctx.beginPath(); ctx.moveTo(...pts[0]);
+            if (L <= L1) ctx.lineTo(pts[0][0] + 60 * (L / L1), pts[0][1] + 60 * (L / L1));
+            else { ctx.lineTo(...pts[1]); const r = (L - L1) / L2; ctx.lineTo(pts[1][0] + 110 * r, pts[1][1] - 130 * r); }
+            ctx.stroke();
+          }
+          const pt = clamp01((t - 12.15) / 0.3);
+          ctx.globalAlpha = pt;
+          text(ctx, "تم تسجيل الحضور", w / 2, 820, "800 50px 'HF Cairo'", "#ffffff");
+          ctx.globalAlpha = clamp01((t - 12.35) / 0.3);
+          text(ctx, "أهلاً وسهلاً", w / 2, 920, "700 66px 'HF Amiri'", "#f0d896");
+          ctx.globalAlpha = 1;
+        }
+        ctx.restore();
+      }
+
+      // ---------- three.js scene ----------
+      const canvas = document.getElementById("stage-canvas");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color("#1b220f");
+      scene.fog = new THREE.Fog("#1b220f", 9, 22);
+      const camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 60);
+
+      scene.add(new THREE.HemisphereLight(0xfff1d6, 0x1a2010, 0.55));
+      const key = new THREE.DirectionalLight(0xffe2b0, 2.4);
+      key.position.set(4, 6, 5); key.target.position.set(-1, 0, -3);
+      key.castShadow = true; key.shadow.mapSize.set(1024, 1024);
+      Object.assign(key.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 0.5, far: 30 });
+      key.shadow.bias = -0.0008;
+      scene.add(key, key.target);
+      const rim = new THREE.DirectionalLight(0xa9c4ff, 1.3);
+      rim.position.set(-5, 3, -4); scene.add(rim);
+      const gateLight = new THREE.PointLight(0x5fd47a, 0, 7, 1.6);
+      gateLight.position.set(-1.2, 0.6, -6.2); scene.add(gateLight);
+
+      // floor
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(60, 60),
+        new THREE.MeshStandardMaterial({ color: 0x262f17, roughness: 0.85, metalness: 0.05 })
+      );
+      floor.rotation.x = -Math.PI / 2; floor.position.y = -1.75; floor.receiveShadow = true;
+      scene.add(floor);
+
+      // card
+      const cardTex = new THREE.CanvasTexture(cardCanvas);
+      const backTex = new THREE.CanvasTexture(backCanvas);
+      [cardTex, backTex].forEach((tx) => { tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = 4; });
+      const goldMat = new THREE.MeshStandardMaterial({ color: 0xd4af5a, metalness: 0.85, roughness: 0.35, transparent: true });
+      const frontMat = new THREE.MeshStandardMaterial({ map: cardTex, roughness: 0.55, metalness: 0.05, transparent: true });
+      const backMat = new THREE.MeshStandardMaterial({ map: backTex, roughness: 0.5, metalness: 0.1, transparent: true });
+      const cardMats = [goldMat, goldMat, goldMat, goldMat, frontMat, backMat];
+      const card = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.2, 0.035), cardMats);
+      card.castShadow = true; scene.add(card);
+
+      // phone
+      const shape = new THREE.Shape();
+      (function () {
+        const w = 1.05, h = 2.15, r = 0.15, x = -w / 2, y = -h / 2;
+        shape.moveTo(x + r, y); shape.lineTo(x + w - r, y); shape.quadraticCurveTo(x + w, y, x + w, y + r);
+        shape.lineTo(x + w, y + h - r); shape.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        shape.lineTo(x + r, y + h); shape.quadraticCurveTo(x, y + h, x, y + h - r);
+        shape.lineTo(x, y + r); shape.quadraticCurveTo(x, y, x + r, y);
+      })();
+      const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.07, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 3, curveSegments: 16 });
+      bodyGeo.center();
+      const phone = new THREE.Group();
+      const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({ color: 0x1c1d1f, metalness: 0.7, roughness: 0.4 }));
+      body.castShadow = true; phone.add(body);
+      const screenTex = new THREE.CanvasTexture(screenCanvas);
+      screenTex.colorSpace = THREE.SRGBColorSpace; screenTex.anisotropy = 4;
+      const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.98, 2.09), new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false }));
+      screen.position.z = 0.051; phone.add(screen);
+      const phoneBack = new THREE.Mesh(new THREE.PlaneGeometry(0.98, 2.09), new THREE.MeshStandardMaterial({ map: backTex, roughness: 0.45, metalness: 0.2 }));
+      phoneBack.position.z = -0.051; phoneBack.rotation.y = Math.PI; phone.add(phoneBack);
+      scene.add(phone);
+
+      // arch (gate)
+      const arch = new THREE.Group();
+      const archMat = new THREE.MeshStandardMaterial({ color: 0xd4af5a, metalness: 0.85, roughness: 0.32, emissive: 0x000000 });
+      const top = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.075, 20, 96, Math.PI), archMat);
+      const pillarGeo = new THREE.CylinderGeometry(0.075, 0.075, 2.05, 20);
+      const pL = new THREE.Mesh(pillarGeo, archMat), pR = new THREE.Mesh(pillarGeo, archMat);
+      pL.position.set(-1.5, -1.025, 0); pR.position.set(1.5, -1.025, 0);
+      [top, pL, pR].forEach((m) => { m.castShadow = true; arch.add(m); });
+      const baseGeo = new THREE.BoxGeometry(0.34, 0.12, 0.34);
+      [-1.5, 1.5].forEach((x) => { const b = new THREE.Mesh(baseGeo, archMat); b.position.set(x, -2.0, 0); arch.add(b); });
+      arch.position.set(-1.2, 0.3, -6.85);
+      scene.add(arch);
+
+      // gold dust (seeded)
+      const DUST = 260, rndD = mulberry32(42), dpos = new Float32Array(DUST * 3), dseed = [];
+      for (let i = 0; i < DUST; i++) dseed.push([rndD() * 18 - 9, rndD() * 5.5 - 1.4, rndD() * 18 - 15, rndD() * 6.28]);
+      const dustGeo = new THREE.BufferGeometry();
+      dustGeo.setAttribute("position", new THREE.BufferAttribute(dpos, 3));
+      const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xe3c47a, size: 0.035, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending }));
+      scene.add(dust);
+
+      // confetti (closed-form, seeded)
+      const CONF = 240, T0 = 11.6, rndC = mulberry32(1234);
+      const confGeo = new THREE.PlaneGeometry(0.07, 0.12);
+      const confMat = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.3, side: THREE.DoubleSide });
+      const confetti = new THREE.InstancedMesh(confGeo, confMat, CONF);
+      const palette = [0xe3c47a, 0xd4af5a, 0xf7f1e3, 0x8fb04a, 0x5fd47a];
+      const conf = [];
+      for (let i = 0; i < CONF; i++) {
+        const a = rndC() * Math.PI, sp = 2 + rndC() * 3.2;
+        conf.push({
+          v: [Math.cos(a) * sp * 0.9, 1.2 + rndC() * 3.4, (rndC() - 0.3) * 2.6],
+          w: [rndC() * 9 - 4.5, rndC() * 9 - 4.5, rndC() * 9 - 4.5],
+          o: [-1.2 + (rndC() - 0.5) * 2.6, 1.6 + rndC() * 0.4, -6.85 + (rndC() - 0.5) * 0.4],
+        });
+        confetti.setColorAt(i, new THREE.Color(palette[i % palette.length]));
+      }
+      confetti.frustumCulled = false;
+      scene.add(confetti);
+      const dummy = new THREE.Object3D();
+
+      // ---------- choreography ----------
+      const camPos = track([
+        [0, [0.25, 0.35, 6.5]], [3.4, [0.05, 0.3, 6.0], "sine.inOut"],
+        [7.3, [0.0, 0.3, 6.0]], [8.7, [0.05, 0.35, -0.5], "power2.inOut"],
+        [11.4, [0.3, 0.4, -0.55], "sine.inOut"], [14.4, [-0.05, 0.5, -0.4], "sine.inOut"],
+        [16.0, [0.55, 1.35, 1.9], "power2.inOut"], [20, [0.85, 1.45, 2.1], "none"],
+      ]);
+      const camTgt = track([
+        [0, [0.25, 0, 0]], [3.4, [0.05, 0, 0], "sine.inOut"],
+        [7.3, [0.0, 0, 0]], [8.7, [0.05, 0.05, -6.6], "power2.inOut"],
+        [14.4, [0.0, 0.05, -6.6]], [16.0, [0.25, 0.0, -6.7], "power2.inOut"], [20, [0.3, 0.0, -6.7], "none"],
+      ]);
+      const cardPos = track([
+        [0, [-1.25, 0.05, 0]], [3.3, [-1.25, 0.05, 0]],
+        [3.85, [-1.0, 0.75, 0.4], "power2.out"], [4.45, [-1.19, 0.35, 0.15], "power3.in"],
+      ]);
+      const cardRot = track([
+        [0, [0.06, -0.55, 0.02]], [3.3, [0.04, 0.3, -0.02], "sine.inOut"],
+        [3.85, [-0.2, 0.0, 0.08], "power2.out"], [4.45, [0, -0.15, 0], "power3.in"],
+      ]);
+      const cardScale = track([[0, 1], [3.3, 1], [3.85, 0.62, "power2.out"], [4.45, 0.18, "power3.in"]]);
+      const cardOpacity = track([[0, 1], [4.3, 1], [4.5, 0, "power1.in"]]);
+      const phonePos = track([
+        [0, [-1.2, -4.2, 0]], [3.45, [-1.2, -4.2, 0]], [4.3, [-1.2, 0, 0], "expo.out"],
+        [7.3, [-1.2, 0.05, 0], "sine.inOut"], [8.7, [-1.2, 0.05, -6.6], "power2.inOut"],
+      ]);
+      const phoneRotY = track([
+        [0, -0.5], [3.45, -0.5], [4.3, -0.16, "expo.out"], [7.3, -0.1, "sine.inOut"],
+        [8.7, Math.PI * 2 - 0.05, "power2.inOut"], [11.4, Math.PI * 2 + 0.06, "sine.inOut"],
+        [14.4, Math.PI * 2 + 0.02, "sine.inOut"], [16.0, Math.PI * 2 + 0.22, "power2.inOut"],
+      ]);
+
+      const archY = track([[0, -4.4], [7.4, -4.4], [8.6, 0.3, "expo.out"]]);
+
+      function renderAt(t) {
+        t = Math.max(0, Math.min(DUR, t));
+        const cp = camPos(t), ct = camTgt(t);
+        camera.position.set(cp[0], cp[1], cp[2]);
+        camera.lookAt(ct[0], ct[1], ct[2]);
+
+        // card
+        const op = cardOpacity(t);
+        card.visible = op > 0.001;
+        if (card.visible) {
+          const p = cardPos(t), r = cardRot(t), s = cardScale(t);
+          card.position.set(p[0], p[1], p[2]);
+          card.rotation.set(r[0], r[1], r[2]);
+          card.scale.setScalar(s);
+          cardMats.forEach((m) => (m.opacity = op));
+        }
+
+        // phone
+        const pp = phonePos(t);
+        phone.position.set(pp[0], pp[1], pp[2]);
+        phone.rotation.set(0, phoneRotY(t), 0);
+        phone.visible = t >= 3.4;
+        if (phone.visible) { paintScreen(t); screenTex.needsUpdate = true; }
+
+        // gate glow
+        const g1 = clamp01((t - 11.45) / 0.35), g2 = clamp01((t - 12.2) / 1.6);
+        const glow = g1 * (1 - 0.85 * ease("power2.out")(g2));
+        arch.visible = t >= 7.35;
+        arch.position.y = archY(t);
+        archMat.emissive.setRGB(0.25 * glow, 0.85 * glow, 0.4 * glow);
+        gateLight.intensity = 9 * glow + (t > 8.6 ? 0.8 * clamp01((t - 8.6) / 0.5) : 0);
+
+        // dust drift (pure function of t)
+        for (let i = 0; i < DUST; i++) {
+          const d = dseed[i];
+          dpos[i * 3] = d[0] + Math.sin(t * 0.3 + d[3]) * 0.15;
+          dpos[i * 3 + 1] = d[1] + Math.sin(t * 0.2 + d[3] * 2) * 0.12 + t * 0.02;
+          dpos[i * 3 + 2] = d[2];
+        }
+        dustGeo.attributes.position.needsUpdate = true;
+
+        // confetti
+        const tau = t - T0, k = 1.5, vt = -0.85;
+        for (let i = 0; i < CONF; i++) {
+          if (tau <= 0) { dummy.position.set(0, -50, 0); dummy.scale.setScalar(0); }
+          else {
+            const c = conf[i], f = (1 - Math.exp(-k * tau)) / k;
+            let y = c.o[1] + (c.v[1] - vt) * f + vt * tau;
+            const landed = y < -1.73;
+            if (landed) y = -1.73;
+            dummy.position.set(c.o[0] + c.v[0] * f, y, c.o[2] + c.v[2] * f);
+            if (landed) dummy.rotation.set(-Math.PI / 2, 0, c.w[2]);
+            else dummy.rotation.set(c.w[0] * tau, c.w[1] * tau, c.w[2] * tau);
+            dummy.scale.setScalar(clamp01(tau / 0.08));
+          }
+          dummy.updateMatrix(); confetti.setMatrixAt(i, dummy.matrix);
+        }
+        confetti.instanceMatrix.needsUpdate = true;
+
+        renderer.render(scene, camera);
+      }
+
+      // build: wait for fonts, paint textures, warm the GPU
+      let ready = false;
+      const build = Promise.all([
+        document.fonts.load("700 100px 'HF Amiri'"),
+        document.fonts.load("400 40px 'HF Cairo'"),
+        document.fonts.load("700 40px 'HF Cairo'"),
+        document.fonts.load("800 40px 'HF Cairo'"),
+      ]).then(() => {
+        paintCard(); paintBack();
+        cardTex.needsUpdate = true; backTex.needsUpdate = true;
+        ready = true;
+        renderAt(0);
+        const px = new Uint8Array(4);
+        renderer.getContext().readPixels(0, 0, 1, 1, renderer.getContext().RGBA, renderer.getContext().UNSIGNED_BYTE, px);
+      });
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["stage"] = build;
+
+      window.addEventListener("hf-seek", (e) => { if (ready && e && e.detail) renderAt(e.detail.time); });
+
+      const proxy = { t: 0 };
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(proxy, { t: 0 }, { t: DUR, duration: DUR, ease: "none", onUpdate: () => { if (ready) renderAt(proxy.t); } }, 0);
+      window.__timelines["stage"] = tl;
+    })();
+  </script>
+</template>
