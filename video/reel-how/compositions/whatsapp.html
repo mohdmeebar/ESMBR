@@ -1,0 +1,106 @@
+<template>
+  <style>
+    @font-face { font-family: "HF Amiri"; font-weight: 700; src: url("assets/fonts/amiri-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; color: #23271a; }
+    .w { display: inline-block; }
+    .head { position: absolute; left: 120px; width: 768px; top: 330px; text-align: center;
+      font-family: "HF Amiri", serif; font-weight: 700; font-size: 92px; line-height: 1.3; color: #4a5e2a; }
+    .head .g { color: #8a6a1f; }
+    .cap { position: absolute; left: 120px; width: 768px; top: 1150px; text-align: center;
+      font-weight: 700; font-size: 44px; line-height: 1.4; color: #8a6a1f; }
+    .kick { position: absolute; left: 0; width: 1080px; top: 290px; text-align: center; font-weight: 700; font-size: 32px; color: #8a8f7a; }
+    .qr { display: block; }
+    .card { position: absolute; width: 300px; height: 420px; background: linear-gradient(135deg, #fbf6ea, #efe4c9);
+      border: 3px solid #b8913a; border-radius: 10px; box-shadow: 0 18px 40px rgba(40, 45, 25, 0.22); text-align: center; }
+    .card::after { content: ""; position: absolute; inset: 8px; border: 1px solid #b8913a; border-radius: 6px; }
+    .card .t1 { font-family: "HF Amiri", serif; font-weight: 700; font-size: 58px; color: #b8913a; margin-top: 26px; line-height: 1.2; }
+    .card .t2 { font-size: 20px; color: #4a5e2a; }
+    .card .nm { font-weight: 800; font-size: 36px; color: #23271a; margin: 6px 0 10px; }
+    .card .qr { margin: 0 auto; }
+  </style>
+  <div id="root" data-composition-id="whatsapp" data-width="1080" data-height="1920" data-duration="8">
+
+    <div id="wa-head" class="head" style="font-size:76px;"><span class="w">تُرسل</span> <span class="w">تلقائياً</span> <span class="w g">عبر</span> <span class="w g">واتساب</span></div>
+    <div id="wa-phone" style="position:absolute;left:294px;top:520px;width:420px;height:720px;border-radius:56px;background:#1c1d1f;box-shadow:0 30px 60px rgba(30,35,20,0.35);">
+      <div style="position:absolute;inset:12px;border-radius:46px;overflow:hidden;background:#fffdf7;">
+        <div style="position:absolute;left:0;right:0;top:0;height:140px;background:#4a5e2a;color:#fff;text-align:center;">
+          <div style="font-weight:800;font-size:30px;padding-top:56px;">دعوات الحفل</div>
+          <div id="wa-count" style="font-size:24px;opacity:0.85;">قائمة المدعوين</div>
+        </div>
+        <div id="wa-r0" style="position:absolute;left:0;right:0;top:150px;height:90px;border-bottom:1px solid #ece8dc;">
+          <div style="position:absolute;right:22px;top:16px;width:60px;height:60px;border-radius:30px;background:#d9e3c4;color:#4a5e2a;font-weight:800;font-size:28px;line-height:60px;text-align:center;">س</div>
+          <div style="position:absolute;right:98px;top:12px;font-weight:800;font-size:26px;">سارة أحمد</div>
+          <div style="position:absolute;right:98px;top:50px;font-size:22px;color:#6b705c;">بطاقة دعوتك للحفل</div>
+          <div id="wa-t0" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#8a8f7a;direction:ltr;">✓</div>
+          <div id="wa-tt0" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#2f9be0;direction:ltr;">✓✓</div>
+        </div>
+        <div id="wa-r1" style="position:absolute;left:0;right:0;top:240px;height:90px;border-bottom:1px solid #ece8dc;">
+          <div style="position:absolute;right:22px;top:16px;width:60px;height:60px;border-radius:30px;background:#efe2c2;color:#4a5e2a;font-weight:800;font-size:28px;line-height:60px;text-align:center;">خ</div>
+          <div style="position:absolute;right:98px;top:12px;font-weight:800;font-size:26px;">خالد محمد</div>
+          <div style="position:absolute;right:98px;top:50px;font-size:22px;color:#6b705c;">بطاقة دعوتك للحفل</div>
+          <div id="wa-t1" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#8a8f7a;direction:ltr;">✓</div>
+          <div id="wa-tt1" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#2f9be0;direction:ltr;">✓✓</div>
+        </div>
+        <div id="wa-r2" style="position:absolute;left:0;right:0;top:330px;height:90px;border-bottom:1px solid #ece8dc;">
+          <div style="position:absolute;right:22px;top:16px;width:60px;height:60px;border-radius:30px;background:#dfe8c8;color:#4a5e2a;font-weight:800;font-size:28px;line-height:60px;text-align:center;">ن</div>
+          <div style="position:absolute;right:98px;top:12px;font-weight:800;font-size:26px;">نورة علي</div>
+          <div style="position:absolute;right:98px;top:50px;font-size:22px;color:#6b705c;">بطاقة دعوتك للحفل</div>
+          <div id="wa-t2" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#8a8f7a;direction:ltr;">✓</div>
+          <div id="wa-tt2" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#2f9be0;direction:ltr;">✓✓</div>
+        </div>
+        <div id="wa-r3" style="position:absolute;left:0;right:0;top:420px;height:90px;border-bottom:1px solid #ece8dc;">
+          <div style="position:absolute;right:22px;top:16px;width:60px;height:60px;border-radius:30px;background:#e8dcc0;color:#4a5e2a;font-weight:800;font-size:28px;line-height:60px;text-align:center;">ع</div>
+          <div style="position:absolute;right:98px;top:12px;font-weight:800;font-size:26px;">عبدالله سالم</div>
+          <div style="position:absolute;right:98px;top:50px;font-size:22px;color:#6b705c;">بطاقة دعوتك للحفل</div>
+          <div id="wa-t3" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#8a8f7a;direction:ltr;">✓</div>
+          <div id="wa-tt3" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#2f9be0;direction:ltr;">✓✓</div>
+        </div>
+        <div id="wa-r4" style="position:absolute;left:0;right:0;top:510px;height:90px;border-bottom:1px solid #ece8dc;">
+          <div style="position:absolute;right:22px;top:16px;width:60px;height:60px;border-radius:30px;background:#d9e3c4;color:#4a5e2a;font-weight:800;font-size:28px;line-height:60px;text-align:center;">ر</div>
+          <div style="position:absolute;right:98px;top:12px;font-weight:800;font-size:26px;">ريم يوسف</div>
+          <div style="position:absolute;right:98px;top:50px;font-size:22px;color:#6b705c;">بطاقة دعوتك للحفل</div>
+          <div id="wa-t4" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#8a8f7a;direction:ltr;">✓</div>
+          <div id="wa-tt4" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#2f9be0;direction:ltr;">✓✓</div>
+        </div>
+        <div id="wa-r5" style="position:absolute;left:0;right:0;top:600px;height:90px;border-bottom:1px solid #ece8dc;">
+          <div style="position:absolute;right:22px;top:16px;width:60px;height:60px;border-radius:30px;background:#efe2c2;color:#4a5e2a;font-weight:800;font-size:28px;line-height:60px;text-align:center;">ي</div>
+          <div style="position:absolute;right:98px;top:12px;font-weight:800;font-size:26px;">يوسف حسن</div>
+          <div style="position:absolute;right:98px;top:50px;font-size:22px;color:#6b705c;">بطاقة دعوتك للحفل</div>
+          <div id="wa-t5" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#8a8f7a;direction:ltr;">✓</div>
+          <div id="wa-tt5" style="position:absolute;left:22px;top:30px;font-weight:800;font-size:26px;color:#2f9be0;direction:ltr;">✓✓</div>
+        </div>
+      </div>
+    </div>
+    <div id="wa-done" style="position:absolute;left:214px;top:345px;width:580px;height:96px;border-radius:48px;background:#4a5e2a;color:#f6eedb;text-align:center;font-weight:800;font-size:38px;line-height:96px;box-shadow:0 14px 30px rgba(40,45,25,0.25);">✓ وصلت لكل المدعوين</div>
+
+  </div>
+  <script>
+    (function () {
+
+      const tl = gsap.timeline({ paused: true });
+      const wordsIn = (sel, at, gap) => tl.fromTo(sel + " .w", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "power4.out", stagger: gap || 0.08 }, at);
+      const lineIn = (sel, at) => tl.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power3.out" }, at);
+      const out = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.25, ease: "power2.in" }, at);
+
+
+      wordsIn("#wa-head", 0.1, 0.08);
+      tl.fromTo("#wa-phone", { opacity: 0, y: 160, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "expo.out" }, 0.0);
+      for (let i = 0; i < 6; i++) {
+        const at = 0.9 + i * 0.45;
+        tl.fromTo("#wa-r" + i, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, at);
+        tl.fromTo("#wa-t" + i, { opacity: 0 }, { opacity: 1, duration: 0.1 }, at + 0.3);
+        tl.fromTo("#wa-t" + i, { opacity: 1 }, { opacity: 0, duration: 0.1, immediateRender: false }, at + 0.75);
+        tl.fromTo("#wa-tt" + i, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" }, at + 0.75);
+      }
+      out("#wa-head", 4.35, 0.2);
+      tl.fromTo("#wa-done", { opacity: 0, scale: 0.7, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "back.out(1.7)" }, 4.6);
+      out("#wa-done", 7.6);
+      tl.to("#wa-phone", { x: -700, rotation: -8, opacity: 0, duration: 0.4, ease: "power3.in" }, 7.55);
+
+      window.__timelines["whatsapp"] = tl;
+    })();
+  </script>
+</template>

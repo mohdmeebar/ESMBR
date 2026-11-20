@@ -1,0 +1,76 @@
+<template>
+  <style>
+    @font-face { font-family: "HF Amiri"; font-weight: 700; src: url("assets/fonts/amiri-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; color: #23271a; }
+    .w { display: inline-block; }
+    .head { position: absolute; left: 120px; width: 768px; top: 330px; text-align: center;
+      font-family: "HF Amiri", serif; font-weight: 700; font-size: 92px; line-height: 1.3; color: #4a5e2a; }
+    .head .g { color: #8a6a1f; }
+    .cap { position: absolute; left: 120px; width: 768px; top: 1150px; text-align: center;
+      font-weight: 700; font-size: 44px; line-height: 1.4; color: #8a6a1f; }
+    .kick { position: absolute; left: 0; width: 1080px; top: 290px; text-align: center; font-weight: 700; font-size: 32px; color: #8a8f7a; }
+    .qr { display: block; }
+    .card { position: absolute; width: 300px; height: 420px; background: linear-gradient(135deg, #fbf6ea, #efe4c9);
+      border: 3px solid #b8913a; border-radius: 10px; box-shadow: 0 18px 40px rgba(40, 45, 25, 0.22); text-align: center; }
+    .card::after { content: ""; position: absolute; inset: 8px; border: 1px solid #b8913a; border-radius: 6px; }
+    .card .t1 { font-family: "HF Amiri", serif; font-weight: 700; font-size: 58px; color: #b8913a; margin-top: 26px; line-height: 1.2; }
+    .card .t2 { font-size: 20px; color: #4a5e2a; }
+    .card .nm { font-weight: 800; font-size: 36px; color: #23271a; margin: 6px 0 10px; }
+    .card .qr { margin: 0 auto; }
+  </style>
+  <div id="root" data-composition-id="live" data-width="1080" data-height="1920" data-duration="5.5">
+
+    <div id="lv-head" class="head" style="font-size:84px;"><span class="w">حضور</span> <span class="w g">يتحدّث</span> <span class="w g">لحظياً</span></div>
+    <div id="lv-card" style="position:absolute;left:120px;top:500px;width:768px;height:740px;border-radius:36px;background:#fffdf7;box-shadow:0 20px 44px rgba(40,45,25,0.15);">
+      <svg style="position:absolute;left:244px;top:40px" width="280" height="280" viewBox="0 0 280 280">
+        <circle cx="140" cy="140" r="115" fill="none" stroke="#ece8dc" stroke-width="26"/>
+        <circle id="lv-arc" cx="140" cy="140" r="115" fill="none" stroke="#4a5e2a" stroke-width="26" stroke-linecap="round" stroke-dasharray="722.6" stroke-dashoffset="722.6" transform="rotate(-90 140 140)"/>
+      </svg>
+      <div id="lv-pct" style="position:absolute;left:244px;width:280px;top:125px;text-align:center;font-weight:800;font-size:76px;color:#4a5e2a;line-height:1;">٠٪</div>
+      <div style="position:absolute;left:244px;width:280px;top:215px;text-align:center;font-size:26px;color:#6b705c;">نسبة الحضور</div>
+      <div style="position:absolute;left:0;right:0;top:345px;text-align:center;font-size:28px;color:#8a8f7a;">أرقام توضيحية</div>
+
+        <div id="lv-r0" style="position:absolute;left:30px;right:30px;top:400px;height:70px;border-radius:18px;background:#f4efe3;">
+          <div style="position:absolute;right:22px;top:14px;font-weight:800;font-size:30px;">سارة أحمد</div>
+          <div style="position:absolute;left:22px;top:12px;height:46px;padding:0 18px;border-radius:23px;background:#3fae5a;color:#fff;font-weight:700;font-size:24px;line-height:46px;">✓ حضر · ٨:٠٢ م</div>
+        </div>
+        <div id="lv-r1" style="position:absolute;left:30px;right:30px;top:482px;height:70px;border-radius:18px;background:#f4efe3;">
+          <div style="position:absolute;right:22px;top:14px;font-weight:800;font-size:30px;">خالد محمد</div>
+          <div style="position:absolute;left:22px;top:12px;height:46px;padding:0 18px;border-radius:23px;background:#3fae5a;color:#fff;font-weight:700;font-size:24px;line-height:46px;">✓ حضر · ٨:٠٥ م</div>
+        </div>
+        <div id="lv-r2" style="position:absolute;left:30px;right:30px;top:564px;height:70px;border-radius:18px;background:#f4efe3;">
+          <div style="position:absolute;right:22px;top:14px;font-weight:800;font-size:30px;">نورة علي</div>
+          <div style="position:absolute;left:22px;top:12px;height:46px;padding:0 18px;border-radius:23px;background:#3fae5a;color:#fff;font-weight:700;font-size:24px;line-height:46px;">✓ حضر · ٨:٠٩ م</div>
+        </div>
+        <div id="lv-r3" style="position:absolute;left:30px;right:30px;top:646px;height:70px;border-radius:18px;background:#f4efe3;">
+          <div style="position:absolute;right:22px;top:14px;font-weight:800;font-size:30px;">عبدالله سالم</div>
+          <div style="position:absolute;left:22px;top:12px;height:46px;padding:0 18px;border-radius:23px;background:#3fae5a;color:#fff;font-weight:700;font-size:24px;line-height:46px;">✓ حضر · ٨:١٤ م</div>
+        </div>
+    </div>
+
+  </div>
+  <script>
+    (function () {
+
+      const tl = gsap.timeline({ paused: true });
+      const wordsIn = (sel, at, gap) => tl.fromTo(sel + " .w", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "power4.out", stagger: gap || 0.08 }, at);
+      const lineIn = (sel, at) => tl.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power3.out" }, at);
+      const out = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.25, ease: "power2.in" }, at);
+
+
+      wordsIn("#lv-head", 0.1, 0.08);
+      tl.fromTo("#lv-card", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 0.0);
+      const pct = { v: 0 }, el = document.getElementById("lv-pct");
+      const arabic = (n) => String(n).replace(/[0-9]/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
+      tl.fromTo(pct, { v: 0 }, { v: 86, duration: 2.6, ease: "power2.out", onUpdate: () => { el.textContent = arabic(Math.round(pct.v)) + "٪"; } }, 0.6);
+      tl.fromTo("#lv-arc", { strokeDashoffset: 722.6 }, { strokeDashoffset: 722.6 * (1 - 0.86), duration: 2.6, ease: "power2.out" }, 0.6);
+      for (let i = 0; i < 4; i++) tl.fromTo("#lv-r" + i, { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.4, ease: "expo.out" }, 0.9 + i * 0.5);
+      out("#lv-head, #lv-card", 5.25);
+
+      window.__timelines["live"] = tl;
+    })();
+  </script>
+</template>
