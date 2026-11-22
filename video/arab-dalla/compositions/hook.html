@@ -4,58 +4,48 @@
     @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
     @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
     @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
-    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; color: #f6ecd6; overflow: hidden; }
+    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; overflow: hidden; }
     .w { display: inline-block; }
-    .goldtxt { background: linear-gradient(100deg, #b8913a 0%, #f6dd94 35%, #fff4cf 50%, #f6dd94 65%, #b8913a 100%);
-      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .dot { position: absolute; border-radius: 50%; background: #e9c97a; }
     .blk { position: absolute; left: 120px; width: 768px; text-align: center; }
-    .ph { position: absolute; border-radius: 30px; border: 10px solid #fbf5e8; box-shadow: 0 28px 60px rgba(0,0,0,0.45); object-fit: cover; }
+    .plaster { position: absolute; inset: 0; background-color: #efe6d4;
+      background-image:
+        radial-gradient(70% 45% at 30% 18%, rgba(255,255,255,0.6), rgba(255,255,255,0) 70%),
+        radial-gradient(55% 40% at 78% 72%, rgba(170,145,110,0.16), rgba(170,145,110,0) 70%),
+        radial-gradient(130% 85% at 50% 50%, rgba(0,0,0,0) 55%, rgba(95,62,30,0.22) 100%); }
+    .walnut { position: absolute; inset: 0; background-color: #5a3622;
+      background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.38), rgba(0,0,0,0) 16%, rgba(0,0,0,0) 84%, rgba(0,0,0,0.38)),
+        repeating-linear-gradient(90deg, rgba(255,215,170,0.035) 0 3px, rgba(0,0,0,0) 3px 11px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 1px, rgba(0,0,0,0) 1px 37px),
+        linear-gradient(180deg, #67402a, #4a2c1c); }
+    .seam { position: absolute; top: 0; width: 2px; height: 1920px; background: rgba(0,0,0,0.32); box-shadow: 1px 0 0 rgba(255,220,180,0.08); }
+    .board { position: absolute; left: 0; width: 1080px; height: 24px;
+      background: linear-gradient(180deg, #8d5e3d 0%, #6c432a 30%, #4b2d1c 100%); box-shadow: 0 14px 22px rgba(0,0,0,0.45); }
+    .led { position: absolute; left: 30px; width: 1020px; height: 3px; border-radius: 2px; background: #ffe7bb; box-shadow: 0 0 14px 4px rgba(255,214,150,0.75); }
+    .glow { position: absolute; left: 0; width: 1080px; background: linear-gradient(180deg, rgba(255,208,140,0.34), rgba(255,208,140,0.07) 70%, rgba(255,208,140,0)); }
+    .card { position: absolute; object-fit: cover; border-radius: 14px; border: 5px solid #f7f0e3; box-shadow: 0 18px 26px rgba(0,0,0,0.5); }
+    .tag { position: absolute; height: 44px; padding: 0 16px; border-radius: 8px; background: #f7f0e3; color: #3a2416;
+      font-weight: 800; font-size: 28px; line-height: 44px; white-space: nowrap; box-shadow: 0 6px 12px rgba(0,0,0,0.35); }
+    .pill { position: absolute; height: 84px; border-radius: 42px; display: flex; align-items: center; justify-content: center; gap: 18px; direction: ltr; }
+    .pill span { font-weight: 800; font-size: 44px; line-height: 1; }
+    .goldtxt { background: linear-gradient(100deg, #6b4314 0%, #a8732a 30%, #e2b865 50%, #a8732a 70%, #6b4314 100%);
+      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .goldlt { background: linear-gradient(100deg, #c9953f 0%, #f3d690 35%, #fff4d6 50%, #f3d690 65%, #c9953f 100%);
+      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
   </style>
   <div id="root" data-composition-id="hook" data-width="1080" data-height="1920" data-duration="3.8">
-    <div id="hk-d0" class="dot" style="left:553px;top:1017px;width:6.6px;height:6.6px;opacity:0.55;"></div>
-    <div id="hk-d1" class="dot" style="left:86px;top:1019px;width:6.6px;height:6.6px;opacity:0.48;"></div>
-    <div id="hk-d2" class="dot" style="left:454px;top:1287px;width:7.1px;height:7.1px;opacity:0.33;"></div>
-    <div id="hk-d3" class="dot" style="left:428px;top:724px;width:6.5px;height:6.5px;opacity:0.31;"></div>
-    <div id="hk-d4" class="dot" style="left:452px;top:1621px;width:7.8px;height:7.8px;opacity:0.63;"></div>
-    <div id="hk-d5" class="dot" style="left:272px;top:108px;width:7.4px;height:7.4px;opacity:0.74;"></div>
-    <div id="hk-d6" class="dot" style="left:803px;top:667px;width:6.3px;height:6.3px;opacity:0.54;"></div>
-    <div id="hk-d7" class="dot" style="left:918px;top:1575px;width:5.3px;height:5.3px;opacity:0.26;"></div>
-    <div id="hk-d8" class="dot" style="left:537px;top:1010px;width:4.6px;height:4.6px;opacity:0.50;"></div>
-    <div id="hk-d9" class="dot" style="left:696px;top:87px;width:5.7px;height:5.7px;opacity:0.57;"></div>
-    <div id="hk-d10" class="dot" style="left:503px;top:678px;width:3.3px;height:3.3px;opacity:0.62;"></div>
-    <div id="hk-d11" class="dot" style="left:324px;top:1065px;width:5.1px;height:5.1px;opacity:0.67;"></div>
-    <div id="hk-d12" class="dot" style="left:681px;top:1197px;width:3.8px;height:3.8px;opacity:0.43;"></div>
-    <div id="hk-d13" class="dot" style="left:921px;top:1209px;width:5.5px;height:5.5px;opacity:0.71;"></div>
-    <div id="hk-d14" class="dot" style="left:332px;top:988px;width:3.1px;height:3.1px;opacity:0.69;"></div>
-    <div id="hk-d15" class="dot" style="left:133px;top:153px;width:7.5px;height:7.5px;opacity:0.52;"></div>
-    <div id="hk-d16" class="dot" style="left:604px;top:1194px;width:8.3px;height:8.3px;opacity:0.73;"></div>
-    <div id="hk-d17" class="dot" style="left:619px;top:935px;width:3.6px;height:3.6px;opacity:0.58;"></div>
-    <div id="hk-d18" class="dot" style="left:767px;top:259px;width:3.8px;height:3.8px;opacity:0.57;"></div>
-    <div id="hk-d19" class="dot" style="left:1000px;top:723px;width:7.6px;height:7.6px;opacity:0.58;"></div>
-    <div id="hk-d20" class="dot" style="left:717px;top:945px;width:6.8px;height:6.8px;opacity:0.36;"></div>
-    <div id="hk-d21" class="dot" style="left:99px;top:1064px;width:5.3px;height:5.3px;opacity:0.34;"></div>
-    <div id="hk-d22" class="dot" style="left:811px;top:10px;width:5.6px;height:5.6px;opacity:0.68;"></div>
-    <div id="hk-d23" class="dot" style="left:679px;top:2px;width:6.0px;height:6.0px;opacity:0.50;"></div>
-    <div id="hk-d24" class="dot" style="left:69px;top:163px;width:9.0px;height:9.0px;opacity:0.56;"></div>
-    <div id="hk-d25" class="dot" style="left:992px;top:1886px;width:3.3px;height:3.3px;opacity:0.33;"></div>
-    <div id="hk-d26" class="dot" style="left:451px;top:1023px;width:3.3px;height:3.3px;opacity:0.28;"></div>
-    <div id="hk-d27" class="dot" style="left:451px;top:1394px;width:5.5px;height:5.5px;opacity:0.42;"></div>
-    <div id="hk-d28" class="dot" style="left:1053px;top:570px;width:5.7px;height:5.7px;opacity:0.37;"></div>
-    <div id="hk-d29" class="dot" style="left:607px;top:1236px;width:3.0px;height:3.0px;opacity:0.32;"></div>
-    <div id="hk-d30" class="dot" style="left:147px;top:1568px;width:4.2px;height:4.2px;opacity:0.57;"></div>
-    <div id="hk-d31" class="dot" style="left:877px;top:192px;width:3.5px;height:3.5px;opacity:0.62;"></div>
-    <div id="hk-d32" class="dot" style="left:370px;top:186px;width:8.3px;height:8.3px;opacity:0.57;"></div>
-    <div id="hk-d33" class="dot" style="left:817px;top:1357px;width:5.3px;height:5.3px;opacity:0.63;"></div>
-    <div id="hk-d34" class="dot" style="left:150px;top:1201px;width:3.1px;height:3.1px;opacity:0.53;"></div>
-    <div id="hk-d35" class="dot" style="left:561px;top:1682px;width:3.3px;height:3.3px;opacity:0.51;"></div>
 
-    <div id="hk-glow" data-layout-ignore style="position:absolute;left:-160px;top:420px;width:1400px;height:1000px;background:radial-gradient(closest-side, rgba(212,175,90,0.28), rgba(212,175,90,0));"></div>
-    <div id="hk-txt" class="blk" style="top:520px;">
-      <div id="hk-l1" class="goldtxt" style="font-family:'HF Amiri',serif;font-weight:700;font-size:270px;line-height:1.2;">جودة</div>
-      <div id="hk-l2" style="font-family:'HF Amiri',serif;font-weight:700;font-size:150px;line-height:1.25;color:#f6ecd6;">المنتجات</div>
-      <div id="hk-rule" style="width:300px;height:4px;margin:22px auto 0;background:#d4af5a;"></div>
-      <div id="hk-sub" style="font-weight:700;font-size:36px;line-height:1.5;margin-top:24px;color:#e9c97a;">من المحلات العربية… إلى طاولة ضيافتك</div>
+    <div class="plaster"></div>
+    <svg id="hk-r1" data-layout-ignore style="position:absolute;left:15px;top:95px;" width="150" height="150" viewBox="-66 -66 132 132"><g fill="none" stroke="#fbf6ec" stroke-width="3" transform="translate(-1.5,-1.5)"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g><g fill="none" stroke="#c9b28c" stroke-width="3"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g></svg>
+    <svg id="hk-r2" data-layout-ignore style="position:absolute;left:915px;top:95px;" width="150" height="150" viewBox="-66 -66 132 132"><g fill="none" stroke="#fbf6ec" stroke-width="3" transform="translate(-1.5,-1.5)"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g><g fill="none" stroke="#c9b28c" stroke-width="3"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g></svg>
+    <svg id="hk-r3" data-layout-ignore style="position:absolute;left:15px;top:1685px;" width="150" height="150" viewBox="-66 -66 132 132"><g fill="none" stroke="#fbf6ec" stroke-width="3" transform="translate(-1.5,-1.5)"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g><g fill="none" stroke="#c9b28c" stroke-width="3"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g></svg>
+    <svg id="hk-r4" data-layout-ignore style="position:absolute;left:915px;top:1685px;" width="150" height="150" viewBox="-66 -66 132 132"><g fill="none" stroke="#fbf6ec" stroke-width="3" transform="translate(-1.5,-1.5)"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g><g fill="none" stroke="#c9b28c" stroke-width="3"><circle r="60"/><circle r="51"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(0)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(30)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(60)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(120)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(150)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(210)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(240)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(300)"/><ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate(330)"/><circle r="11"/></g></svg>
+    <svg id="hk-a" data-layout-ignore style="position:absolute;left:0;top:0;" width="1080" height="1920"><path class="hk-a-l" d="M 124 1400 L 124 664.0 Q 124 342.0 504.0 250.0 Q 884 342.0 884 664.0 L 884 1400" fill="none" stroke="#fbf6ec" stroke-width="5" transform="translate(-2,-2)"/><path class="hk-a-l" d="M 124 1400 L 124 664.0 Q 124 342.0 504.0 250.0 Q 884 342.0 884 664.0 L 884 1400" fill="none" stroke="#c4ab84" stroke-width="5"/><path class="hk-a-l" d="M 152 1400 L 152 694.8 Q 152 372.8 504.0 280.8 Q 856 372.8 856 694.8 L 856 1400" fill="none" stroke="#fbf6ec" stroke-width="5" transform="translate(-2,-2)"/><path class="hk-a-l" d="M 152 1400 L 152 694.8 Q 152 372.8 504.0 280.8 Q 856 372.8 856 694.8 L 856 1400" fill="none" stroke="#c4ab84" stroke-width="5"/></svg>
+    <div id="hk-txt" class="blk" style="top:560px;">
+      <div id="hk-l1" class="goldtxt" style="font-family:'HF Amiri',serif;font-weight:700;font-size:250px;line-height:1.2;">جودة</div>
+      <div id="hk-l2" style="font-family:'HF Amiri',serif;font-weight:700;font-size:140px;line-height:1.25;color:#4a2c1d;">المنتجات</div>
+      <div id="hk-rule" style="width:280px;height:4px;margin:22px auto 0;background:#a8732a;"></div>
+      <div id="hk-sub" style="font-weight:700;font-size:36px;line-height:1.5;margin-top:24px;color:#6b4a2e;">من المحلات العربية… إلى طاولة ضيافتك</div>
     </div>
 
   </div>
@@ -67,48 +57,13 @@
       const lineIn = (sel, at) => tl.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.35, ease: "power3.out" }, at);
       const out = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.25, ease: "power2.in" }, at);
 
-      tl.fromTo("#hk-d0", { x: 0, y: 0 }, { x: 2, y: -216, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d1", { x: 0, y: 0 }, { x: 21, y: -157, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d2", { x: 0, y: 0 }, { x: -13, y: -109, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d3", { x: 0, y: 0 }, { x: 5, y: -176, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d4", { x: 0, y: 0 }, { x: 7, y: -131, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d5", { x: 0, y: 0 }, { x: -21, y: -127, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d6", { x: 0, y: 0 }, { x: -21, y: -215, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d7", { x: 0, y: 0 }, { x: 20, y: -92, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d8", { x: 0, y: 0 }, { x: -25, y: -197, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d9", { x: 0, y: 0 }, { x: -4, y: -237, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d10", { x: 0, y: 0 }, { x: 16, y: -147, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d11", { x: 0, y: 0 }, { x: -23, y: -106, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d12", { x: 0, y: 0 }, { x: 26, y: -140, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d13", { x: 0, y: 0 }, { x: -4, y: -174, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d14", { x: 0, y: 0 }, { x: -6, y: -128, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d15", { x: 0, y: 0 }, { x: -24, y: -162, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d16", { x: 0, y: 0 }, { x: 6, y: -176, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d17", { x: 0, y: 0 }, { x: 30, y: -184, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d18", { x: 0, y: 0 }, { x: -9, y: -236, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d19", { x: 0, y: 0 }, { x: -13, y: -91, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d20", { x: 0, y: 0 }, { x: -11, y: -195, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d21", { x: 0, y: 0 }, { x: 26, y: -211, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d22", { x: 0, y: 0 }, { x: 12, y: -171, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d23", { x: 0, y: 0 }, { x: 18, y: -106, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d24", { x: 0, y: 0 }, { x: 20, y: -193, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d25", { x: 0, y: 0 }, { x: -6, y: -175, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d26", { x: 0, y: 0 }, { x: -14, y: -154, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d27", { x: 0, y: 0 }, { x: -8, y: -174, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d28", { x: 0, y: 0 }, { x: -11, y: -189, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d29", { x: 0, y: 0 }, { x: 19, y: -106, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d30", { x: 0, y: 0 }, { x: 14, y: -212, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d31", { x: 0, y: 0 }, { x: -23, y: -115, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d32", { x: 0, y: 0 }, { x: 5, y: -195, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d33", { x: 0, y: 0 }, { x: -18, y: -116, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d34", { x: 0, y: 0 }, { x: 22, y: -235, duration: 3.8, ease: "none" }, 0);
-      tl.fromTo("#hk-d35", { x: 0, y: 0 }, { x: -15, y: -203, duration: 3.8, ease: "none" }, 0);
 
+      tl.fromTo(".hk-a-l", { strokeDasharray: 3200, strokeDashoffset: 3200 }, { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 0);
       tl.fromTo("#hk-l1", { backgroundPosition: "0% 50%" }, { backgroundPosition: "100% 50%", duration: 1.6, ease: "sine.inOut" }, 0.2);
       tl.fromTo("#hk-l1", { scale: 1.06 }, { scale: 1, duration: 0.8, ease: "expo.out" }, 0);
       tl.fromTo("#hk-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 0.8);
       lineIn("#hk-sub", 1.3);
-      tl.to("#hk-txt", { scale: 2.3, opacity: 0, filter: "blur(14px)", duration: 0.4, ease: "power3.in" }, 3.4);
+      tl.to("#hk-txt", { scale: 1.6, opacity: 0, filter: "blur(14px)", duration: 0.4, ease: "power3.in" }, 3.4);
 
       window.__timelines["hook"] = tl;
     })();

@@ -1,5 +1,7 @@
-"""Builds the Arab Dalla reel (1080x1920, ~58 s). Run from this folder: python3 -I build.py ."""
-import json, os, sys
+"""Builds the Arab Dalla reel (1080x1920, ~60 s) in the look of the shop itself:
+ivory plaster facade with carved arches and rosettes, walnut shelving with warm
+LED strips inside. Run from this folder: python3 -I build.py ."""
+import json, math, os, sys
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "."
 BRANDS = json.load(open(os.path.join(OUT, "assets/brands/brands.json")))
@@ -7,8 +9,9 @@ PROD_DIR = os.path.join(OUT, "assets/products")
 os.makedirs(os.path.join(OUT, "compositions"), exist_ok=True)
 for f in os.listdir(os.path.join(OUT, "compositions")):
     os.remove(os.path.join(OUT, "compositions", f))
-AR = "٠١٢٣٤٥٦٧٨٩"
-ar = lambda n: "".join(AR[int(c)] for c in str(n))
+
+CX = 504          # centre of the platforms' shared safe area (120..888)
+PHONE = "+973 33337811"
 
 
 def products(key):
@@ -20,13 +23,34 @@ HEAD = """  <style>
     @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
     @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
     @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
-    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; color: #f6ecd6; overflow: hidden; }
+    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; overflow: hidden; }
     .w { display: inline-block; }
-    .goldtxt { background: linear-gradient(100deg, #b8913a 0%, #f6dd94 35%, #fff4cf 50%, #f6dd94 65%, #b8913a 100%);
-      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .dot { position: absolute; border-radius: 50%; background: #e9c97a; }
     .blk { position: absolute; left: 120px; width: 768px; text-align: center; }
-    .ph { position: absolute; border-radius: 30px; border: 10px solid #fbf5e8; box-shadow: 0 28px 60px rgba(0,0,0,0.45); object-fit: cover; }
+    .plaster { position: absolute; inset: 0; background-color: #efe6d4;
+      background-image:
+        radial-gradient(70% 45% at 30% 18%, rgba(255,255,255,0.6), rgba(255,255,255,0) 70%),
+        radial-gradient(55% 40% at 78% 72%, rgba(170,145,110,0.16), rgba(170,145,110,0) 70%),
+        radial-gradient(130% 85% at 50% 50%, rgba(0,0,0,0) 55%, rgba(95,62,30,0.22) 100%); }
+    .walnut { position: absolute; inset: 0; background-color: #5a3622;
+      background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.38), rgba(0,0,0,0) 16%, rgba(0,0,0,0) 84%, rgba(0,0,0,0.38)),
+        repeating-linear-gradient(90deg, rgba(255,215,170,0.035) 0 3px, rgba(0,0,0,0) 3px 11px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 1px, rgba(0,0,0,0) 1px 37px),
+        linear-gradient(180deg, #67402a, #4a2c1c); }
+    .seam { position: absolute; top: 0; width: 2px; height: 1920px; background: rgba(0,0,0,0.32); box-shadow: 1px 0 0 rgba(255,220,180,0.08); }
+    .board { position: absolute; left: 0; width: 1080px; height: 24px;
+      background: linear-gradient(180deg, #8d5e3d 0%, #6c432a 30%, #4b2d1c 100%); box-shadow: 0 14px 22px rgba(0,0,0,0.45); }
+    .led { position: absolute; left: 30px; width: 1020px; height: 3px; border-radius: 2px; background: #ffe7bb; box-shadow: 0 0 14px 4px rgba(255,214,150,0.75); }
+    .glow { position: absolute; left: 0; width: 1080px; background: linear-gradient(180deg, rgba(255,208,140,0.34), rgba(255,208,140,0.07) 70%, rgba(255,208,140,0)); }
+    .card { position: absolute; object-fit: cover; border-radius: 14px; border: 5px solid #f7f0e3; box-shadow: 0 18px 26px rgba(0,0,0,0.5); }
+    .tag { position: absolute; height: 44px; padding: 0 16px; border-radius: 8px; background: #f7f0e3; color: #3a2416;
+      font-weight: 800; font-size: 28px; line-height: 44px; white-space: nowrap; box-shadow: 0 6px 12px rgba(0,0,0,0.35); }
+    .pill { position: absolute; height: 84px; border-radius: 42px; display: flex; align-items: center; justify-content: center; gap: 18px; direction: ltr; }
+    .pill span { font-weight: 800; font-size: 44px; line-height: 1; }
+    .goldtxt { background: linear-gradient(100deg, #6b4314 0%, #a8732a 30%, #e2b865 50%, #a8732a 70%, #6b4314 100%);
+      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .goldlt { background: linear-gradient(100deg, #c9953f 0%, #f3d690 35%, #fff4d6 50%, #f3d690 65%, #c9953f 100%);
+      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
   </style>
 """
 
@@ -37,28 +61,83 @@ HELP = """
       const out = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.25, ease: "power2.in" }, at);
 """
 
-
-def mulberry32(a):
-    def r():
-        nonlocal a
-        a = (a + 0x6D2B79F5) & 0xFFFFFFFF
-        t = a
-        t = ((t ^ (t >> 15)) * (1 | t)) & 0xFFFFFFFF
-        t = (t + (((t ^ (t >> 7)) * (61 | t)) & 0xFFFFFFFF) ^ t) & 0xFFFFFFFF
-        return ((t ^ (t >> 14)) & 0xFFFFFFFF) / 4294967296
-    return r
+WA = '<svg width="50" height="50" viewBox="0 0 56 56"><circle cx="28" cy="28" r="28" fill="#2f9e57"/><path d="M28 13c-8.3 0-15 6.1-15 13.7 0 3 1.1 5.8 2.9 8.1L14 42l7.6-2.3c1.9.8 4.1 1.3 6.4 1.3 8.3 0 15-6.1 15-13.7S36.3 13 28 13z" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M22.5 22.5c.6 3.7 3.6 7.6 8 9.4l2.2-2.2 3 1.4-.4 2.6c-6.8.6-13.8-6.4-13.2-13.2l2.6-.4 1.4 3z" fill="#fff"/></svg>'
 
 
-def dust(prefix, n, seed, dur):
-    """Gold dust drifting upward: markup + finite tweens (a pure function of time)."""
-    r = mulberry32(seed)
-    html, js = "", ""
-    for i in range(n):
-        x, y, s, o = r() * 1080, r() * 1920, 3 + r() * 6, 0.25 + r() * 0.5
-        dy, dx = 80 + r() * 160, (r() - 0.5) * 60
-        html += f'    <div id="{prefix}-d{i}" class="dot" style="left:{x:.0f}px;top:{y:.0f}px;width:{s:.1f}px;height:{s:.1f}px;opacity:{o:.2f};"></div>\n'
-        js += f'      tl.fromTo("#{prefix}-d{i}", {{ x: 0, y: 0 }}, {{ x: {dx:.0f}, y: {-dy:.0f}, duration: {dur}, ease: "none" }}, 0);\n'
-    return html, js
+def pill(pid, top, dark):
+    bg, fg, shadow = ("#4a2c1d", "#f6ecd6", "0 14px 30px rgba(74,44,29,0.35)") if dark else ("#f6ecd6", "#2a1c10", "0 14px 30px rgba(0,0,0,0.45)")
+    return (f'    <div id="{pid}" class="pill" style="left:{CX - 290}px;top:{top}px;width:580px;background:{bg};box-shadow:{shadow};">'
+            f'{WA}<span style="color:{fg};">{PHONE}</span></div>\n')
+
+
+def rosette(x, y, size, sid):
+    """A carved plaster medallion like the shop's facade: relief = shadow stroke + light stroke."""
+    petals = "".join(f'<ellipse cx="0" cy="-27" rx="9" ry="20" transform="rotate({k * 30})"/>' for k in range(12))
+    body = f'<circle r="60"/><circle r="51"/>{petals}<circle r="11"/>'
+    return (f'    <svg id="{sid}" data-layout-ignore style="position:absolute;left:{x - size // 2}px;top:{y - size // 2}px;" width="{size}" height="{size}" viewBox="-66 -66 132 132">'
+            f'<g fill="none" stroke="#fbf6ec" stroke-width="3" transform="translate(-1.5,-1.5)">{body}</g>'
+            f'<g fill="none" stroke="#c9b28c" stroke-width="3">{body}</g></svg>\n')
+
+
+def arch(aid, left, top, w, h):
+    """A pointed arch in carved relief, drawn with two strokes so it can be 'carved' on screen."""
+    def path(i):
+        x0, x1, y1, sp = left + i, left + w - i, top + h, top + i * 1.1
+        mid = left + w / 2
+        return (f"M {x0} {y1} L {x0} {sp + 0.36 * h} Q {x0} {sp + 0.08 * h} {mid} {sp} "
+                f"Q {x1} {sp + 0.08 * h} {x1} {sp + 0.36 * h} L {x1} {y1}")
+    paths = ""
+    for k, i in enumerate((0, 28)):
+        d = path(i)
+        paths += (f'<path class="{aid}-l" d="{d}" fill="none" stroke="#fbf6ec" stroke-width="5" transform="translate(-2,-2)"/>'
+                  f'<path class="{aid}-l" d="{d}" fill="none" stroke="#c4ab84" stroke-width="5"/>')
+    return f'    <svg id="{aid}" data-layout-ignore style="position:absolute;left:0;top:0;" width="1080" height="1920">{paths}</svg>\n'
+
+
+def seams():
+    return "".join(f'    <div class="seam" style="left:{x}px;"></div>\n' for x in (270, 540, 810))
+
+
+def shelves(sid, rows, s, top_board, items, tags=None, gap=24, deco=True):
+    """Walnut shelving: rows of product cards standing on boards lit by LED strips.
+    rows: card counts per row; items: image paths. Labels hang on the shelf edge under
+    their card. With deco, empty lit shelves continue above and below, like the shop wall."""
+    html, labels, ids = "", "", []
+    pitch = s + 50
+
+    def shelf(y, glow_h, gid=None, dim=False):
+        op = ' style="opacity:0.5"' if dim else ""
+        g = f' id="{gid}"' if gid else ""
+        return (f'    <div class="board" style="top:{y}px;"></div>\n'
+                f'    <div class="led" style="top:{y + 24}px;{"opacity:0.55;" if dim else ""}"></div>\n'
+                f'    <div{g} class="glow" style="top:{y + 26}px;height:{glow_h}px;{"opacity:0.5;" if dim else ""}"></div>\n')
+
+    if deco and top_board - 230 > 0:
+        html += shelf(top_board - 230, 200, dim=True)
+    y = top_board
+    idx = 0
+    for r, k in enumerate(rows):
+        html += shelf(y, s + 30, f"{sid}-g{r}")
+        y_cards = y + 50
+        width = k * s + (k - 1) * gap
+        x = CX - width // 2
+        for j in range(k):
+            cid = f"{sid}-c{idx}"
+            html += f'    <img id="{cid}" class="card" src="{items[idx]}" alt="" style="left:{x}px;top:{y_cards}px;width:{s}px;height:{s}px;" />\n'
+            ids.append(cid)
+            if tags and tags[idx]:
+                labels += f'    <div id="{sid}-t{idx}" class="tag" style="top:{y_cards + s - 4}px;left:{x + s // 2}px;transform:translateX(-50%);">{tags[idx]}</div>\n'
+            x += s + gap
+            idx += 1
+        y = y_cards + s
+    html += f'    <div class="board" style="top:{y}px;"></div>\n'
+    end = y + 24
+    if deco:
+        yy = max(y + pitch, 1300)
+        while yy < 1900:
+            html += shelf(yy, pitch - 30, dim=True)
+            yy += pitch
+    return html + labels, ids, end
 
 
 def scene(sid, dur, body, script):
@@ -78,207 +157,201 @@ def scene(sid, dur, body, script):
     open(os.path.join(OUT, "compositions", sid + ".html"), "w").write(html)
 
 
-PLAN = []  # (scene id, duration)
+PLAN = []
 
-# ---------------- 1. hook: the headline is on screen from frame 0 ----------------
+# ---------------- 1. hook: plaster facade, a carved arch, the headline from frame 0 ----------------
 D = 3.8
-d_html, d_js = dust("hk", 36, 11, D)
-scene("hook", D, d_html + """
-    <div id="hk-glow" data-layout-ignore style="position:absolute;left:-160px;top:420px;width:1400px;height:1000px;background:radial-gradient(closest-side, rgba(212,175,90,0.28), rgba(212,175,90,0));"></div>
-    <div id="hk-txt" class="blk" style="top:520px;">
-      <div id="hk-l1" class="goldtxt" style="font-family:'HF Amiri',serif;font-weight:700;font-size:270px;line-height:1.2;">جودة</div>
-      <div id="hk-l2" style="font-family:'HF Amiri',serif;font-weight:700;font-size:150px;line-height:1.25;color:#f6ecd6;">المنتجات</div>
-      <div id="hk-rule" style="width:300px;height:4px;margin:22px auto 0;background:#d4af5a;"></div>
-      <div id="hk-sub" style="font-weight:700;font-size:36px;line-height:1.5;margin-top:24px;color:#e9c97a;">من المحلات العربية… إلى طاولة ضيافتك</div>
+scene("hook", D, f"""
+    <div class="plaster"></div>
+{rosette(90, 170, 150, "hk-r1")}{rosette(990, 170, 150, "hk-r2")}{rosette(90, 1760, 150, "hk-r3")}{rosette(990, 1760, 150, "hk-r4")}{arch("hk-a", CX - 380, 250, 760, 1150)}    <div id="hk-txt" class="blk" style="top:560px;">
+      <div id="hk-l1" class="goldtxt" style="font-family:'HF Amiri',serif;font-weight:700;font-size:250px;line-height:1.2;">جودة</div>
+      <div id="hk-l2" style="font-family:'HF Amiri',serif;font-weight:700;font-size:140px;line-height:1.25;color:#4a2c1d;">المنتجات</div>
+      <div id="hk-rule" style="width:280px;height:4px;margin:22px auto 0;background:#a8732a;"></div>
+      <div id="hk-sub" style="font-weight:700;font-size:36px;line-height:1.5;margin-top:24px;color:#6b4a2e;">من المحلات العربية… إلى طاولة ضيافتك</div>
     </div>
-""", d_js + """
+""", """
+      tl.fromTo(".hk-a-l", { strokeDasharray: 3200, strokeDashoffset: 3200 }, { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 0);
       tl.fromTo("#hk-l1", { backgroundPosition: "0% 50%" }, { backgroundPosition: "100% 50%", duration: 1.6, ease: "sine.inOut" }, 0.2);
       tl.fromTo("#hk-l1", { scale: 1.06 }, { scale: 1, duration: 0.8, ease: "expo.out" }, 0);
       tl.fromTo("#hk-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 0.8);
       lineIn("#hk-sub", 1.3);
-      tl.to("#hk-txt", { scale: 2.3, opacity: 0, filter: "blur(14px)", duration: 0.4, ease: "power3.in" }, 3.4);
+      tl.to("#hk-txt", { scale: 1.6, opacity: 0, filter: "blur(14px)", duration: 0.4, ease: "power3.in" }, 3.4);
 """)
 PLAN.append(("hook", D))
 
-# ---------------- 2. the shop: Arab Dalla ----------------
+# ---------------- 2. the shop sign: the logo on a recessed plaster panel, as on the storefront ----------------
 D = 3.4
-d_html, d_js = dust("br", 30, 23, D)
-scene("brand", D, d_html + """
-    <div id="br-glow" data-layout-ignore style="position:absolute;left:-200px;top:300px;width:1400px;height:900px;background:radial-gradient(closest-side, rgba(212,175,90,0.25), rgba(212,175,90,0));"></div>
-    <div id="br-logo" style="position:absolute;left:64px;top:420px;width:880px;height:529px;padding:60px;"><img src="assets/logo-gold.png" alt="" style="display:block;width:760px;height:409px;filter:drop-shadow(0 0 26px rgba(233,201,122,0.35));" /></div>
-    <div id="br-t1" class="blk" style="top:960px;font-family:'HF Amiri',serif;font-weight:700;font-size:92px;line-height:1.3;color:#f6ecd6;"><span class="w">متخصصون</span> <span class="w">في</span> <span class="w" style="color:#e9c97a">الضيافة</span></div>
-    <div id="br-t2" class="blk" style="top:1110px;font-weight:700;font-size:42px;line-height:1.5;color:#e9c97a;">منتجات مختارة من المحلات العربية</div>
-""", d_js + """
-      tl.fromTo("#br-logo", { clipPath: "inset(0% 0% 100% 0%)", scale: 0.94 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 1.0, ease: "power2.inOut" }, 0.05);
-      tl.fromTo("#br-glow", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.out" }, 0.3);
+scene("brand", D, f"""
+    <div class="plaster"></div>
+{rosette(110, 1600, 130, "br-r1")}{rosette(900, 1600, 130, "br-r2")}    <div id="br-panel" style="position:absolute;left:{CX - 380}px;top:380px;width:760px;height:440px;border-radius:6px;
+      background:#f3ebdc;box-shadow: inset 0 0 0 3px #e2d5bd, inset 6px 6px 14px rgba(120,90,55,0.22), inset -4px -4px 10px rgba(255,255,255,0.8);"></div>
+    <div id="br-logo" style="position:absolute;left:{CX - 320}px;top:410px;width:640px;height:380px;padding:30px 20px;"><img src="assets/logo-dark.png" alt="" style="display:block;width:600px;height:323px;" /></div>
+    <div id="br-t1" class="blk" style="top:900px;font-family:'HF Amiri',serif;font-weight:700;font-size:92px;line-height:1.3;color:#4a2c1d;"><span class="w">متخصصون</span> <span class="w">في</span> <span class="w" style="color:#8a5a1f">الضيافة</span></div>
+    <div id="br-t2" class="blk" style="top:1050px;font-weight:700;font-size:40px;line-height:1.5;color:#6b4a2e;">منتجات مختارة من المحلات العربية</div>
+""", """
+      tl.fromTo("#br-panel", { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 0.0);
+      tl.fromTo("#br-logo", { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.9, ease: "power2.inOut" }, 0.2);
       wordsIn("#br-t1", 1.0, 0.12);
       lineIn("#br-t2", 1.5);
       out("#br-t1, #br-t2", 3.05, 0.25);
-      tl.to("#br-logo", { y: -420, scale: 0.5, opacity: 0, duration: 0.4, ease: "power3.in" }, 3.0);
+      tl.to("#br-panel, #br-logo", { y: -380, opacity: 0, duration: 0.4, ease: "power3.in" }, 3.0);
 """)
 PLAN.append(("brand", D))
 
-# ---------------- 3. the house brand: Deem by Arab Dalla ----------------
+# ---------------- 3. the house brand: Deem by Arab Dalla, on the shop's walnut shelves ----------------
 DEEM = [("deem-1.jpg", "الدلة الذهبية"), ("deem-2.jpg", "الدلة الفضية"), ("deem-3.jpg", "دلة الضيوف"),
         ("deem-4.jpg", "سخان الحليب"), ("deem-5.jpg", "بريق الكرك"), ("deem-6.jpg", "")]
-GAP = 0.85
-D = round(0.5 + GAP * (len(DEEM) - 1) + 1.55, 2)
-d_html, d_js = dust("hr", 24, 31, D)
-cards, chips, js = "", "", ""
-for i, (img, name) in enumerate(DEEM):
-    cards += f'      <img id="hr-c{i}" class="ph" src="assets/products/{img}" alt="" style="left:0;top:0;width:600px;height:600px;" />\n'
-    t = 0.5 + i * GAP
-    if i == 0:
-        js += f'      tl.fromTo("#hr-c0", {{ opacity: 0, y: 140, rotation: -4 }}, {{ opacity: 1, y: 0, rotation: 0, duration: 0.6, ease: "expo.out" }}, {t:.2f});\n'
-    else:
-        js += f'      tl.fromTo("#hr-c{i}", {{ clipPath: "inset(0% 0% 0% 100%)" }}, {{ clipPath: "inset(0% 0% 0% 0%)", duration: 0.45, ease: "power3.inOut" }}, {t:.2f});\n'
-    js += f'      tl.fromTo("#hr-band", {{ x: 0 }}, {{ x: 1100, duration: 0.6, ease: "power2.inOut", immediateRender: false }}, {t + 0.4:.2f});\n'
-    if name:
-        chips += f'    <div id="hr-n{i}" class="blk" style="top:1170px;"><span style="display:inline-block;padding:0 34px;height:72px;border-radius:36px;background:rgba(26,18,11,0.85);border:2px solid #b8913a;color:#f3d98f;font-weight:800;font-size:36px;line-height:68px;">{name}</span></div>\n'
-        js += f'      tl.fromTo("#hr-n{i}", {{ opacity: 0, y: 16 }}, {{ opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }}, {t + 0.25:.2f});\n'
-        if i < len(DEEM) - 1:
-            js += f'      tl.to("#hr-n{i}", {{ opacity: 0, duration: 0.15, ease: "power2.in" }}, {t + GAP:.2f});\n'
-        else:
-            js += f'      out("#hr-n{i}", {D - 0.35:.2f});\n'
-scene("hero", D, d_html + f"""
-    <img id="hr-logo" src="assets/deem-cream.png" alt="" style="position:absolute;left:390px;top:290px;width:300px;height:153px;filter:drop-shadow(0 0 18px rgba(233,201,122,0.3));" />
-    <div id="hr-by" class="blk" style="top:460px;font-weight:700;font-size:40px;line-height:1.4;color:#e9c97a;">من دلة العرب</div>
-    <div id="hr-stage" data-layout-allow-overlap style="position:absolute;left:240px;top:550px;width:600px;height:600px;">
-{{cards}}      <div id="hr-shine" data-layout-ignore style="position:absolute;left:10px;top:10px;width:580px;height:580px;border-radius:22px;overflow:hidden;">
-        <div id="hr-band" style="position:absolute;left:-300px;top:-100px;width:180px;height:800px;background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,250,230,0.5), rgba(255,255,255,0));"></div>
-      </div>
-    </div>
-{{chips}}""".replace("{cards}", cards).replace("{chips}", chips), d_js + f"""
+D = 5.8
+sh, ids, bottom = shelves("hr", [3, 3], 230, 470, [f"assets/products/{p}" for p, _ in DEEM], [n for _, n in DEEM], gap=34)
+js = ""
+for i, cid in enumerate(ids):
+    t = 0.55 + i * 0.28
+    js += f'      tl.fromTo("#{cid}", {{ opacity: 0, y: 50, scale: 0.82, transformOrigin: "50% 100%" }}, {{ opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }}, {t:.2f});\n'
+    if DEEM[i][1]:
+        js += f'      tl.fromTo("#hr-t{i}", {{ opacity: 0, y: -10 }}, {{ opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }}, {t + 0.3:.2f});\n'
+scene("hero", D, f"""
+    <div class="walnut"></div>
+{seams()}    <img id="hr-logo" src="assets/deem-cream.png" alt="" style="position:absolute;left:{CX - 105}px;top:296px;width:210px;height:107px;" />
+    <div id="hr-by" class="blk" style="top:402px;font-weight:700;font-size:34px;line-height:1.4;color:#f0cf8a;">من دلة العرب</div>
+    <div id="hr-stage" data-layout-allow-overlap style="position:absolute;inset:0;">
+{sh}    </div>
+{pill("hr-pill", 1150, False)}""", f"""
       tl.fromTo("#hr-logo", {{ opacity: 0, scale: 1.25, filter: "blur(12px)" }}, {{ opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }}, 0.05);
-      lineIn("#hr-by", 0.35);
-{js}      out("#hr-logo, #hr-by", {D - 0.35:.2f});
-      tl.to("#hr-stage", {{ x: -900, rotation: -6, opacity: 0, duration: 0.35, ease: "power3.in" }}, {D - 0.38:.2f});
+      lineIn("#hr-by", 0.3);
+      tl.fromTo("#hr-g0, #hr-g1", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.4, ease: "power2.out", stagger: 0.15 }}, 0.2);
+{js}      lineIn("#hr-pill", 1.2);
+      out("#hr-logo, #hr-by, #hr-pill", {D - 0.32:.2f});
+      tl.to("#hr-stage", {{ x: -260, opacity: 0, duration: 0.3, ease: "power2.in" }}, {D - 0.32:.2f});
 """)
 PLAN.append(("hero", D))
 
-# ---------------- 4. brands intro ----------------
+# ---------------- 4. brands intro, on the walnut wall ----------------
 D = 1.45
-scene("brands-intro", D, """
-    <div id="bi-t" class="blk" style="top:700px;font-family:'HF Amiri',serif;font-weight:700;font-size:120px;line-height:1.3;color:#f6ecd6;"><span class="w">علامات</span> <span class="w" style="color:#f3d98f">عربية</span></div>
-    <div id="bi-s" class="blk" style="top:880px;font-weight:700;font-size:46px;line-height:1.4;color:#e9c97a;">في مكان واحد</div>
+scene("brands-intro", D, f"""
+    <div class="walnut"></div>
+{seams()}    <div id="bi-t" class="blk" style="top:720px;font-family:'HF Amiri',serif;font-weight:700;font-size:120px;line-height:1.3;color:#f6ecd6;"><span class="w">علامات</span> <span class="w" style="color:#f3d98f">عربية</span></div>
+    <div id="bi-led" class="led" style="left:{CX - 200}px;width:400px;top:905px;"></div>
+    <div id="bi-s" class="blk" style="top:930px;font-weight:700;font-size:46px;line-height:1.4;color:#f0cf8a;">في مكان واحد</div>
 """, """
       wordsIn("#bi-t", 0.05, 0.12);
+      tl.fromTo("#bi-led", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 0.1);
       lineIn("#bi-s", 0.15);
-      tl.to("#bi-t, #bi-s", { scale: 1.8, opacity: 0, filter: "blur(12px)", duration: 0.25, ease: "power3.in" }, 1.2);
+      tl.to("#bi-t, #bi-s, #bi-led", { y: -120, opacity: 0, filter: "blur(10px)", duration: 0.25, ease: "power3.in" }, 1.2);
 """)
 PLAN.append(("brands-intro", D))
 
-# ---------------- 5. one scene per brand: logo, then its products land in a stack ----------------
-STEP = 0.35
-ROT = [-5, 4, -3, 6, -2]
-n_br = len(BRANDS)
+# ---------------- 5. one shelf wall per brand: logo plaque, products spread on the shelves, the number ----------------
+LAYOUT = {1: ([1], 380, 520), 2: ([2], 340, 560), 3: ([2, 1], 255, 480), 4: ([2, 2], 255, 480), 5: ([3, 2], 235, 480)}
 for bi, b in enumerate(BRANDS):
     key = b["key"]
     prods = products(key)
     n = len(prods)
-    D = round(2.05 + STEP * n, 2)
+    rows, s, top = LAYOUT[n]
+    D = round(2.75 + 0.08 * n, 2)
     sid = "b-" + key
-    rgb = [int(b["bg"][k:k + 2], 16) for k in (1, 3, 5)]
-    light = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) > 200
-    ncol, nshadow = ("#2a1c10", "none") if light else ("#ffffff", "0 2px 12px rgba(0,0,0,0.5)")
-    ph = ""
+    sh, ids, bottom = shelves(sid, rows, s, top, [f"assets/products/{p}" for p in prods])
     js = ""
-    for i, p in enumerate(prods):
-        ph += f'      <img id="{sid}-p{i}" class="ph" src="assets/products/{p}" alt="" style="left:{224 + i * 4}px;top:{596 - i * 4}px;width:560px;height:560px;opacity:0;" />\n'
-        t = 0.85 + i * STEP
-        js += f'      tl.fromTo("#{sid}-p{i}", {{ opacity: 0, x: 760, rotation: 14 }}, {{ opacity: 1, x: 0, rotation: {ROT[i % 5]}, duration: 0.45, ease: "expo.out" }}, {t:.2f});\n'
+    for i, cid in enumerate(ids):
+        js += f'      tl.fromTo("#{cid}", {{ opacity: 0, y: 50, scale: 0.82, transformOrigin: "50% 100%" }}, {{ opacity: 1, y: 0, scale: 1, duration: 0.48, ease: "back.out(1.5)" }}, {0.35 + i * 0.1:.2f});\n'
+    glows = ", ".join(f"#{sid}-g{r}" for r in range(len(rows)))
+    plaque_top = top - 170
     scene(sid, D, f"""
-    <div id="{sid}-bg" data-layout-ignore style="position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 45%, {b["bg"]} 0%, {b["flood"]} 75%);"></div>
-    <div id="{sid}-stage" data-layout-allow-overlap style="position:absolute;inset:0;">
-      <img id="{sid}-logo" src="assets/brands/{key}.jpg" alt="" style="position:absolute;left:254px;top:500px;width:500px;height:500px;border-radius:36px;box-shadow:0 24px 60px rgba(0,0,0,0.4);" />
-{ph}      <div id="{sid}-n" class="blk" style="top:1176px;font-weight:700;font-size:34px;line-height:1.4;color:{ncol};text-shadow:{nshadow};">{ar(bi + 1)} من {ar(n_br)}</div>
+    <div class="walnut"></div>
+{seams()}    <div id="{sid}-stage" data-layout-allow-overlap style="position:absolute;inset:0;">
+{sh}      <img id="{sid}-logo" src="assets/brands/{key}.jpg" alt="" style="position:absolute;left:{CX - 82}px;top:{plaque_top}px;width:164px;height:164px;border-radius:22px;border:5px solid #f7f0e3;box-shadow:0 14px 28px rgba(0,0,0,0.5);" />
     </div>
-""", f"""
-      tl.fromTo("#{sid}-bg", {{ opacity: 0.6 }}, {{ opacity: 1, duration: 0.25, ease: "power2.out" }}, 0);
-      tl.fromTo("#{sid}-logo", {{ opacity: 0, rotationY: -85, scale: 0.85, transformPerspective: 1400 }}, {{ opacity: 1, rotationY: 0, scale: 1, duration: 0.38, ease: "power3.out" }}, 0.02);
-      tl.to("#{sid}-logo", {{ y: -300, scale: 0.5, duration: 0.45, ease: "power3.inOut" }}, 0.62);
-{js}      lineIn("#{sid}-n", 0.9);
-      tl.to("#{sid}-stage", {{ x: -260, opacity: 0, filter: "blur(10px)", duration: 0.22, ease: "power2.in" }}, {D - 0.24:.2f});
+{pill(sid + "-pill", 1150, False)}""", f"""
+      tl.fromTo("#{sid}-stage", {{ x: 240, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }}, 0);
+      tl.fromTo("#{sid}-logo", {{ rotationY: -85, transformPerspective: 1200 }}, {{ rotationY: 0, duration: 0.4, ease: "power3.out" }}, 0.05);
+      tl.fromTo("{glows}", {{ opacity: 0.2 }}, {{ opacity: 1, duration: 0.4, ease: "power2.out" }}, 0.15);
+{js}      lineIn("#{sid}-pill", 0.5);
+      tl.to("#{sid}-stage", {{ x: -240, opacity: 0, duration: 0.28, ease: "power2.in" }}, {D - 0.3:.2f});
+      out("#{sid}-pill", {D - 0.3:.2f});
 """)
     PLAN.append((sid, D))
 
-# ---------------- 6. the 3D ring of every brand ----------------
-R, CW = 520, 300
-faces = ""
-for i, b in enumerate(BRANDS):
-    ang = i * 360 / n_br
-    faces += f'        <img src="assets/brands/{b["key"]}.jpg" alt="" style="position:absolute;left:{-CW // 2}px;top:{-CW // 2}px;width:{CW}px;height:{CW}px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY({ang:.2f}deg) translateZ({R}px);" />\n'
-D = 3.4
-d_html, d_js = dust("rg", 24, 37, D)
-scene("ring", D, d_html + f"""
-    <div id="rg-t" class="blk" style="top:330px;font-family:'HF Amiri',serif;font-weight:700;font-size:96px;line-height:1.3;color:#f6ecd6;"><span class="w">تحت</span> <span class="w">سقف</span> <span class="w" style="color:#f3d98f">واحد</span></div>
-    <div id="rg-s" class="blk" style="top:470px;font-weight:700;font-size:42px;line-height:1.4;color:#e9c97a;">منتجات من أكثر من دولة عربية</div>
-    <div id="rg-stage" data-layout-allow-overflow data-layout-ignore style="position:absolute;left:0;top:0;width:1080px;height:1920px;perspective:1700px;perspective-origin:504px 960px;">
-      <div id="rg-ring" style="position:absolute;left:504px;top:960px;width:0;height:0;transform-style:preserve-3d;">
-{faces}      </div>
-    </div>
-""", d_js + """
-      wordsIn("#rg-t", 0.05, 0.1);
-      lineIn("#rg-s", 0.4);
-      tl.fromTo("#rg-ring", { rotationX: -6, rotationY: 40, scale: 0.55, opacity: 0 }, { rotationX: -6, rotationY: -20, scale: 1, opacity: 1, duration: 0.9, ease: "power3.out" }, 0.0);
-      tl.to("#rg-ring", { rotationY: -250, duration: 2.2, ease: "none" }, 0.9);
-      out("#rg-t, #rg-s", 3.05);
-      tl.to("#rg-stage", { scale: 1.7, opacity: 0, filter: "blur(12px)", duration: 0.4, ease: "power3.in" }, 3.0);
-""")
-PLAN.append(("ring", D))
+# ---------------- 6. the shop's walnut doors open onto every brand ----------------
+D = 4.4
+wall_items = [f"assets/brands/{b['key']}.jpg" for b in BRANDS]
+sh, ids, bottom = shelves("st", [4, 4, 3], 178, 490, wall_items, gap=18, deco=False)
+pops = ""
+for i, cid in enumerate(ids):
+    pops += f'      tl.fromTo("#{cid}", {{ opacity: 0, y: 30, scale: 0.85, transformOrigin: "50% 100%" }}, {{ opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.6)" }}, {0.9 + i * 0.05:.2f});\n'
 
-# ---------------- 7. quality: the wall of brands + the headline ----------------
-tiles = ""
-order = [b["key"] for b in BRANDS]
-order.insert(4, "__dalla")
-for i, key in enumerate(order[:12]):
-    c, r = i % 3, i // 3
-    x, y = 30 + c * 324, 330 + r * 324
-    if key == "__dalla":
-        tiles += f'    <div id="ql-t{i}" style="position:absolute;left:{x}px;top:{y}px;width:300px;height:300px;border-radius:28px;background:#2a1c10;border:2px solid #b8913a;"><img src="assets/logo-gold.png" alt="" style="position:absolute;left:20px;top:96px;width:260px;height:140px;" /></div>\n'
-    else:
-        tiles += f'    <img id="ql-t{i}" src="assets/brands/{key}.jpg" alt="" style="position:absolute;left:{x}px;top:{y}px;width:300px;height:300px;border-radius:28px;" />\n'
-D = 4.0
+
+def door(did, side):
+    panels = ""
+    for k, (t, h) in enumerate(((140, 520), (720, 520), (1300, 480))):
+        panels += (f'<div style="position:absolute;left:70px;top:{t}px;width:400px;height:{h}px;border-radius:10px;'
+                   f'box-shadow: inset 0 0 0 8px #3a1f14, inset 0 0 0 12px #7a4a30, inset 6px 8px 18px rgba(0,0,0,0.45);">'
+                   f'<div style="position:absolute;left:70px;top:{int(h * 0.12)}px;width:260px;height:{int(h * 0.76)}px;border-radius:50%;'
+                   f'box-shadow: inset 0 0 0 6px #3a1f14, inset 0 0 0 10px #7a4a30, inset 4px 6px 12px rgba(0,0,0,0.4);"></div></div>')
+    handle_x = 500 if side == "l" else 22
+    origin = "0% 50%" if side == "l" else "100% 50%"
+    left = 0 if side == "l" else 540
+    return (f'      <div id="{did}" style="position:absolute;left:{left}px;top:0;width:540px;height:1920px;transform-origin:{origin};'
+            f'background-color:#4a2619;background-image:repeating-linear-gradient(90deg, rgba(255,210,170,0.04) 0 3px, rgba(0,0,0,0) 3px 12px),'
+            f'linear-gradient(180deg,#5a2f1e,#3e2015);box-shadow: inset 0 0 0 10px #351a10;">{panels}'
+            f'<div style="position:absolute;left:{handle_x}px;top:900px;width:18px;height:120px;border-radius:9px;background:linear-gradient(90deg,#8a6a2a,#e6c77a,#8a6a2a);"></div></div>\n')
+
+
+scene("store", D, f"""
+    <div id="st-wall" style="position:absolute;inset:0;">
+      <div class="walnut"></div>
+{seams()}{sh}    </div>
+    <div id="st-light" data-layout-ignore style="position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 50%, rgba(255,214,150,0.35), rgba(255,214,150,0));"></div>
+    <div id="st-t" class="blk" style="top:300px;font-family:'HF Amiri',serif;font-weight:700;font-size:100px;line-height:1.3;color:#f6ecd6;text-shadow:0 4px 20px rgba(0,0,0,0.5);"><span class="w">تحت</span> <span class="w">سقف</span> <span class="w" style="color:#f3d98f">واحد</span></div>
+    <div id="st-s" class="blk" style="top:428px;font-weight:700;font-size:38px;line-height:1.4;color:#f0cf8a;">منتجات من أكثر من دولة عربية</div>
+    <div id="st-doors" data-layout-ignore style="position:absolute;inset:0;perspective:1800px;">
+{door("st-dl", "l")}{door("st-dr", "r")}    </div>
+""", pops + """
+      tl.fromTo("#st-dl", { rotationY: 0 }, { rotationY: -100, duration: 1.2, ease: "power2.inOut" }, 0.25);
+      tl.fromTo("#st-dr", { rotationY: 0 }, { rotationY: 100, duration: 1.2, ease: "power2.inOut" }, 0.25);
+      tl.to("#st-doors", { opacity: 0, duration: 0.3, ease: "power1.in" }, 1.2);
+      tl.fromTo("#st-light", { opacity: 1 }, { opacity: 0.35, duration: 1.0, ease: "power2.out" }, 0.6);
+      tl.fromTo("#st-g0, #st-g1, #st-g2", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out", stagger: 0.15 }, 0.7);
+      wordsIn("#st-t", 1.3, 0.12);
+      lineIn("#st-s", 1.7);
+      out("#st-t, #st-s", 4.05);
+      tl.to("#st-wall", { scale: 1.25, opacity: 0, filter: "blur(10px)", duration: 0.4, ease: "power3.in" }, 4.0);
+""")
+PLAN.append(("store", D))
+
+# ---------------- 7. quality: a lit headline on the walnut wall ----------------
+D = 3.8
 scene("quality", D, f"""
-    <div id="ql-wall" data-layout-ignore style="position:absolute;inset:0;">
-{tiles}    </div>
-    <div id="ql-dim" data-layout-ignore style="position:absolute;inset:0;background:radial-gradient(closest-side at 50% 45%, rgba(18,12,7,0.92), rgba(18,12,7,0.72));"></div>
+    <div class="walnut"></div>
+{seams()}    <div id="ql-spot" data-layout-ignore style="position:absolute;inset:0;background:radial-gradient(55% 32% at 50% 44%, rgba(255,214,150,0.32), rgba(255,214,150,0));"></div>
     <div id="ql-txt" class="blk" style="top:560px;">
-      <div id="ql-l1" class="goldtxt" style="font-family:'HF Amiri',serif;font-weight:700;font-size:230px;line-height:1.2;">جودة</div>
+      <div id="ql-l1" class="goldlt" style="font-family:'HF Amiri',serif;font-weight:700;font-size:230px;line-height:1.2;">جودة</div>
       <div id="ql-l2" style="font-family:'HF Amiri',serif;font-weight:700;font-size:130px;line-height:1.25;color:#f6ecd6;">المنتجات</div>
-      <div id="ql-rule" style="width:300px;height:4px;margin:22px auto 0;background:#d4af5a;"></div>
-      <div id="ql-sub" style="font-weight:700;font-size:46px;line-height:1.5;margin-top:22px;color:#e9c97a;">مختارة بعناية لضيافتك</div>
+      <div id="ql-led" class="led" style="position:relative;left:auto;margin:26px auto 0;width:320px;"></div>
+      <div id="ql-sub" style="font-weight:700;font-size:46px;line-height:1.5;margin-top:26px;color:#f0cf8a;">مختارة بعناية لضيافتك</div>
     </div>
 """, """
-      for (let i = 0; i < 12; i++) {
-        const c = i % 3, r = Math.floor(i / 3), dist = Math.abs(c - 1) + Math.abs(r - 1.5);
-        tl.fromTo("#ql-t" + i, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 0.05 + dist * 0.12);
-      }
-      tl.fromTo("#ql-dim", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.9);
-      tl.fromTo("#ql-l1", { opacity: 0, scale: 1.4, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, 1.1);
-      tl.fromTo("#ql-l1", { backgroundPosition: "0% 50%" }, { backgroundPosition: "100% 50%", duration: 1.6, ease: "sine.inOut" }, 1.5);
-      tl.fromTo("#ql-l2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 1.35);
-      tl.fromTo("#ql-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 1.7);
-      lineIn("#ql-sub", 2.0);
-      out("#ql-txt", 3.65);
-      tl.to("#ql-wall", { scale: 1.15, opacity: 0, duration: 0.4, ease: "power2.in" }, 3.6);
+      tl.fromTo("#ql-spot", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.0);
+      tl.fromTo("#ql-l1", { opacity: 0, scale: 1.35, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, 0.1);
+      tl.fromTo("#ql-l1", { backgroundPosition: "0% 50%" }, { backgroundPosition: "100% 50%", duration: 1.6, ease: "sine.inOut" }, 0.5);
+      tl.fromTo("#ql-l2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.35);
+      tl.fromTo("#ql-led", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 0.7);
+      lineIn("#ql-sub", 1.0);
+      out("#ql-txt", 3.45);
+      tl.to("#ql-spot", { opacity: 0, duration: 0.35 }, 3.45);
 """)
 PLAN.append(("quality", D))
 
-# ---------------- 8. end card ----------------
+# ---------------- 8. end card: the storefront sign on plaster, and the number ----------------
 D = 4.4
-d_html, d_js = dust("en", 30, 51, D)
-CHAT = '<svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="28" fill="#2f9e57"/><path d="M28 13c-8.3 0-15 6.1-15 13.7 0 3 1.1 5.8 2.9 8.1L14 42l7.6-2.3c1.9.8 4.1 1.3 6.4 1.3 8.3 0 15-6.1 15-13.7S36.3 13 28 13z" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M22.5 22.5c.6 3.7 3.6 7.6 8 9.4l2.2-2.2 3 1.4-.4 2.6c-6.8.6-13.8-6.4-13.2-13.2l2.6-.4 1.4 3z" fill="#fff"/></svg>'
-scene("end", D, d_html + f"""
-    <div id="en-glow" data-layout-ignore style="position:absolute;left:-200px;top:260px;width:1400px;height:900px;background:radial-gradient(closest-side, rgba(212,175,90,0.25), rgba(212,175,90,0));"></div>
-    <div id="en-logo" style="position:absolute;left:114px;top:340px;width:780px;height:475px;padding:60px;"><img src="assets/logo-gold.png" alt="" style="display:block;width:660px;height:355px;filter:drop-shadow(0 0 26px rgba(233,201,122,0.35));" /></div>
-    <div id="en-t" class="blk" style="top:820px;font-family:'HF Amiri',serif;font-weight:700;font-size:84px;line-height:1.3;color:#f6ecd6;"><span class="w">جودة</span> <span class="w">تليق</span> <span class="w" style="color:#f3d98f">بضيافتك</span></div>
-    <div id="en-s" class="blk" style="top:960px;font-weight:700;font-size:40px;line-height:1.4;color:#e9c97a;">للطلب والاستفسار</div>
-    <div id="en-pill" style="position:absolute;left:174px;top:1050px;width:660px;height:110px;border-radius:55px;background:#f6ecd6;display:flex;align-items:center;justify-content:center;gap:22px;direction:ltr;box-shadow:0 18px 40px rgba(0,0,0,0.35);">
-      {CHAT}<span style="font-weight:800;font-size:52px;color:#2a1c10;line-height:1;">+973 33337811</span>
-    </div>
-""", d_js + """
-      tl.fromTo("#en-logo", { clipPath: "inset(0% 0% 100% 0%)", scale: 0.94 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 0.9, ease: "power2.inOut" }, 0.05);
+scene("end", D, f"""
+    <div class="plaster"></div>
+{rosette(110, 210, 140, "en-r1")}{rosette(900, 210, 140, "en-r2")}{rosette(110, 1700, 140, "en-r3")}{rosette(900, 1700, 140, "en-r4")}    <div id="en-panel" style="position:absolute;left:{CX - 360}px;top:340px;width:720px;height:420px;border-radius:6px;
+      background:#f3ebdc;box-shadow: inset 0 0 0 3px #e2d5bd, inset 6px 6px 14px rgba(120,90,55,0.22), inset -4px -4px 10px rgba(255,255,255,0.8);"></div>
+    <div id="en-logo" style="position:absolute;left:{CX - 300}px;top:370px;width:600px;height:360px;padding:30px 20px;"><img src="assets/logo-dark.png" alt="" style="display:block;width:560px;height:301px;" /></div>
+    <div id="en-t" class="blk" style="top:820px;font-family:'HF Amiri',serif;font-weight:700;font-size:84px;line-height:1.3;color:#4a2c1d;"><span class="w">جودة</span> <span class="w">تليق</span> <span class="w" style="color:#8a5a1f">بضيافتك</span></div>
+    <div id="en-s" class="blk" style="top:960px;font-weight:700;font-size:40px;line-height:1.4;color:#6b4a2e;">للطلب والاستفسار</div>
+{pill("en-pill", 1050, True)}""", """
+      tl.fromTo("#en-panel", { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 0.0);
+      tl.fromTo("#en-logo", { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.9, ease: "power2.inOut" }, 0.15);
       wordsIn("#en-t", 0.7, 0.12);
       lineIn("#en-s", 1.2);
       tl.fromTo("#en-pill", { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 1.4);
@@ -301,8 +374,7 @@ open(os.path.join(OUT, "index.html"), "w").write(f"""<!doctype html>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
     <style>
       * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-      html, body {{ margin: 0; width: 1080px; height: 1920px; overflow: hidden;
-        background: radial-gradient(120% 70% at 50% 42%, #33230f 0%, #1a120b 55%, #0f0a06 100%); }}
+      html, body {{ margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #4a2c1c; }}
       #root {{ position: relative; width: 100%; height: 100%; }}
     </style>
   </head>
@@ -317,5 +389,3 @@ open(os.path.join(OUT, "index.html"), "w").write(f"""<!doctype html>
 </html>
 """)
 print("total", TOTAL, "music", music, "scenes", len(PLAN))
-for sid, du in PLAN:
-    print(f"  {sid:14s} {du}")

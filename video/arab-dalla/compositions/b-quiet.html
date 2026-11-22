@@ -4,24 +4,64 @@
     @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
     @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
     @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
-    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; color: #f6ecd6; overflow: hidden; }
+    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; overflow: hidden; }
     .w { display: inline-block; }
-    .goldtxt { background: linear-gradient(100deg, #b8913a 0%, #f6dd94 35%, #fff4cf 50%, #f6dd94 65%, #b8913a 100%);
-      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .dot { position: absolute; border-radius: 50%; background: #e9c97a; }
     .blk { position: absolute; left: 120px; width: 768px; text-align: center; }
-    .ph { position: absolute; border-radius: 30px; border: 10px solid #fbf5e8; box-shadow: 0 28px 60px rgba(0,0,0,0.45); object-fit: cover; }
+    .plaster { position: absolute; inset: 0; background-color: #efe6d4;
+      background-image:
+        radial-gradient(70% 45% at 30% 18%, rgba(255,255,255,0.6), rgba(255,255,255,0) 70%),
+        radial-gradient(55% 40% at 78% 72%, rgba(170,145,110,0.16), rgba(170,145,110,0) 70%),
+        radial-gradient(130% 85% at 50% 50%, rgba(0,0,0,0) 55%, rgba(95,62,30,0.22) 100%); }
+    .walnut { position: absolute; inset: 0; background-color: #5a3622;
+      background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.38), rgba(0,0,0,0) 16%, rgba(0,0,0,0) 84%, rgba(0,0,0,0.38)),
+        repeating-linear-gradient(90deg, rgba(255,215,170,0.035) 0 3px, rgba(0,0,0,0) 3px 11px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 1px, rgba(0,0,0,0) 1px 37px),
+        linear-gradient(180deg, #67402a, #4a2c1c); }
+    .seam { position: absolute; top: 0; width: 2px; height: 1920px; background: rgba(0,0,0,0.32); box-shadow: 1px 0 0 rgba(255,220,180,0.08); }
+    .board { position: absolute; left: 0; width: 1080px; height: 24px;
+      background: linear-gradient(180deg, #8d5e3d 0%, #6c432a 30%, #4b2d1c 100%); box-shadow: 0 14px 22px rgba(0,0,0,0.45); }
+    .led { position: absolute; left: 30px; width: 1020px; height: 3px; border-radius: 2px; background: #ffe7bb; box-shadow: 0 0 14px 4px rgba(255,214,150,0.75); }
+    .glow { position: absolute; left: 0; width: 1080px; background: linear-gradient(180deg, rgba(255,208,140,0.34), rgba(255,208,140,0.07) 70%, rgba(255,208,140,0)); }
+    .card { position: absolute; object-fit: cover; border-radius: 14px; border: 5px solid #f7f0e3; box-shadow: 0 18px 26px rgba(0,0,0,0.5); }
+    .tag { position: absolute; height: 44px; padding: 0 16px; border-radius: 8px; background: #f7f0e3; color: #3a2416;
+      font-weight: 800; font-size: 28px; line-height: 44px; white-space: nowrap; box-shadow: 0 6px 12px rgba(0,0,0,0.35); }
+    .pill { position: absolute; height: 84px; border-radius: 42px; display: flex; align-items: center; justify-content: center; gap: 18px; direction: ltr; }
+    .pill span { font-weight: 800; font-size: 44px; line-height: 1; }
+    .goldtxt { background: linear-gradient(100deg, #6b4314 0%, #a8732a 30%, #e2b865 50%, #a8732a 70%, #6b4314 100%);
+      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .goldlt { background: linear-gradient(100deg, #c9953f 0%, #f3d690 35%, #fff4d6 50%, #f3d690 65%, #c9953f 100%);
+      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
   </style>
-  <div id="root" data-composition-id="b-quiet" data-width="1080" data-height="1920" data-duration="3.1">
+  <div id="root" data-composition-id="b-quiet" data-width="1080" data-height="1920" data-duration="2.99">
 
-    <div id="b-quiet-bg" data-layout-ignore style="position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 45%, #b6a498 0%, #706054 75%);"></div>
+    <div class="walnut"></div>
+    <div class="seam" style="left:270px;"></div>
+    <div class="seam" style="left:540px;"></div>
+    <div class="seam" style="left:810px;"></div>
     <div id="b-quiet-stage" data-layout-allow-overlap style="position:absolute;inset:0;">
-      <img id="b-quiet-logo" src="assets/brands/quiet.jpg" alt="" style="position:absolute;left:254px;top:500px;width:500px;height:500px;border-radius:36px;box-shadow:0 24px 60px rgba(0,0,0,0.4);" />
-      <img id="b-quiet-p0" class="ph" src="assets/products/quiet-1.jpg" alt="" style="left:224px;top:596px;width:560px;height:560px;opacity:0;" />
-      <img id="b-quiet-p1" class="ph" src="assets/products/quiet-2.jpg" alt="" style="left:228px;top:592px;width:560px;height:560px;opacity:0;" />
-      <img id="b-quiet-p2" class="ph" src="assets/products/quiet-3.jpg" alt="" style="left:232px;top:588px;width:560px;height:560px;opacity:0;" />
-      <div id="b-quiet-n" class="blk" style="top:1176px;font-weight:700;font-size:34px;line-height:1.4;color:#ffffff;text-shadow:0 2px 12px rgba(0,0,0,0.5);">١٠ من ١١</div>
+    <div class="board" style="top:250px;"></div>
+    <div class="led" style="top:274px;opacity:0.55;"></div>
+    <div class="glow" style="top:276px;height:200px;opacity:0.5;"></div>
+    <div class="board" style="top:480px;"></div>
+    <div class="led" style="top:504px;"></div>
+    <div id="b-quiet-g0" class="glow" style="top:506px;height:285px;"></div>
+    <img id="b-quiet-c0" class="card" src="assets/products/quiet-1.jpg" alt="" style="left:237px;top:530px;width:255px;height:255px;" />
+    <img id="b-quiet-c1" class="card" src="assets/products/quiet-2.jpg" alt="" style="left:516px;top:530px;width:255px;height:255px;" />
+    <div class="board" style="top:785px;"></div>
+    <div class="led" style="top:809px;"></div>
+    <div id="b-quiet-g1" class="glow" style="top:811px;height:285px;"></div>
+    <img id="b-quiet-c2" class="card" src="assets/products/quiet-3.jpg" alt="" style="left:377px;top:835px;width:255px;height:255px;" />
+    <div class="board" style="top:1090px;"></div>
+    <div class="board" style="top:1395px;"></div>
+    <div class="led" style="top:1419px;opacity:0.55;"></div>
+    <div class="glow" style="top:1421px;height:275px;opacity:0.5;"></div>
+    <div class="board" style="top:1700px;"></div>
+    <div class="led" style="top:1724px;opacity:0.55;"></div>
+    <div class="glow" style="top:1726px;height:275px;opacity:0.5;"></div>
+      <img id="b-quiet-logo" src="assets/brands/quiet.jpg" alt="" style="position:absolute;left:422px;top:310px;width:164px;height:164px;border-radius:22px;border:5px solid #f7f0e3;box-shadow:0 14px 28px rgba(0,0,0,0.5);" />
     </div>
+    <div id="b-quiet-pill" class="pill" style="left:214px;top:1150px;width:580px;background:#f6ecd6;box-shadow:0 14px 30px rgba(0,0,0,0.45);"><svg width="50" height="50" viewBox="0 0 56 56"><circle cx="28" cy="28" r="28" fill="#2f9e57"/><path d="M28 13c-8.3 0-15 6.1-15 13.7 0 3 1.1 5.8 2.9 8.1L14 42l7.6-2.3c1.9.8 4.1 1.3 6.4 1.3 8.3 0 15-6.1 15-13.7S36.3 13 28 13z" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M22.5 22.5c.6 3.7 3.6 7.6 8 9.4l2.2-2.2 3 1.4-.4 2.6c-6.8.6-13.8-6.4-13.2-13.2l2.6-.4 1.4 3z" fill="#fff"/></svg><span style="color:#2a1c10;">+973 33337811</span></div>
 
   </div>
   <script>
@@ -33,14 +73,15 @@
       const out = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.25, ease: "power2.in" }, at);
 
 
-      tl.fromTo("#b-quiet-bg", { opacity: 0.6 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 0);
-      tl.fromTo("#b-quiet-logo", { opacity: 0, rotationY: -85, scale: 0.85, transformPerspective: 1400 }, { opacity: 1, rotationY: 0, scale: 1, duration: 0.38, ease: "power3.out" }, 0.02);
-      tl.to("#b-quiet-logo", { y: -300, scale: 0.5, duration: 0.45, ease: "power3.inOut" }, 0.62);
-      tl.fromTo("#b-quiet-p0", { opacity: 0, x: 760, rotation: 14 }, { opacity: 1, x: 0, rotation: -5, duration: 0.45, ease: "expo.out" }, 0.85);
-      tl.fromTo("#b-quiet-p1", { opacity: 0, x: 760, rotation: 14 }, { opacity: 1, x: 0, rotation: 4, duration: 0.45, ease: "expo.out" }, 1.20);
-      tl.fromTo("#b-quiet-p2", { opacity: 0, x: 760, rotation: 14 }, { opacity: 1, x: 0, rotation: -3, duration: 0.45, ease: "expo.out" }, 1.55);
-      lineIn("#b-quiet-n", 0.9);
-      tl.to("#b-quiet-stage", { x: -260, opacity: 0, filter: "blur(10px)", duration: 0.22, ease: "power2.in" }, 2.86);
+      tl.fromTo("#b-quiet-stage", { x: 240, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 0);
+      tl.fromTo("#b-quiet-logo", { rotationY: -85, transformPerspective: 1200 }, { rotationY: 0, duration: 0.4, ease: "power3.out" }, 0.05);
+      tl.fromTo("#b-quiet-g0, #b-quiet-g1", { opacity: 0.2 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 0.15);
+      tl.fromTo("#b-quiet-c0", { opacity: 0, y: 50, scale: 0.82, transformOrigin: "50% 100%" }, { opacity: 1, y: 0, scale: 1, duration: 0.48, ease: "back.out(1.5)" }, 0.35);
+      tl.fromTo("#b-quiet-c1", { opacity: 0, y: 50, scale: 0.82, transformOrigin: "50% 100%" }, { opacity: 1, y: 0, scale: 1, duration: 0.48, ease: "back.out(1.5)" }, 0.45);
+      tl.fromTo("#b-quiet-c2", { opacity: 0, y: 50, scale: 0.82, transformOrigin: "50% 100%" }, { opacity: 1, y: 0, scale: 1, duration: 0.48, ease: "back.out(1.5)" }, 0.55);
+      lineIn("#b-quiet-pill", 0.5);
+      tl.to("#b-quiet-stage", { x: -240, opacity: 0, duration: 0.28, ease: "power2.in" }, 2.69);
+      out("#b-quiet-pill", 2.69);
 
       window.__timelines["b-quiet"] = tl;
     })();
