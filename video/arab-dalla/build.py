@@ -79,7 +79,7 @@ scene("hook", 4.2, d_html + """
       <div id="hk-l1" class="goldtxt" style="font-family:'HF Amiri',serif;font-weight:700;font-size:270px;line-height:1.2;">جودة</div>
       <div id="hk-l2" style="font-family:'HF Amiri',serif;font-weight:700;font-size:150px;line-height:1.25;color:#f6ecd6;">المنتجات</div>
       <div id="hk-rule" style="width:300px;height:4px;margin:22px auto 0;background:#d4af5a;"></div>
-      <div id="hk-sub" style="font-weight:700;font-size:40px;line-height:1.5;margin-top:24px;color:#e9c97a;">من محلات الخليج… إلى ضيافتك</div>
+      <div id="hk-sub" style="font-weight:700;font-size:40px;line-height:1.5;margin-top:24px;color:#e9c97a;">من المحلات العربية… إلى طاولة ضيافتك</div>
     </div>
 """, d_js + """
       tl.fromTo("#hk-l1", { backgroundPosition: "0% 50%" }, { backgroundPosition: "100% 50%", duration: 1.6, ease: "sine.inOut" }, 0.2);
@@ -95,7 +95,7 @@ scene("brand", 4.2, d_html + """
     <div id="br-glow" data-layout-ignore style="position:absolute;left:-200px;top:300px;width:1400px;height:900px;background:radial-gradient(closest-side, rgba(212,175,90,0.25), rgba(212,175,90,0));"></div>
     <div id="br-logo" style="position:absolute;left:64px;top:420px;width:880px;height:529px;padding:60px;"><img src="assets/logo-gold.png" alt="" style="display:block;width:760px;height:409px;filter:drop-shadow(0 0 26px rgba(233,201,122,0.35));" /></div>
     <div id="br-t1" class="blk" style="top:960px;font-family:'HF Amiri',serif;font-weight:700;font-size:92px;line-height:1.3;color:#f6ecd6;"><span class="w">متخصصون</span> <span class="w">في</span> <span class="w" style="color:#e9c97a">الضيافة</span></div>
-    <div id="br-t2" class="blk" style="top:1110px;font-weight:700;font-size:42px;line-height:1.5;color:#e9c97a;">منتجات مختارة من محلات الخليج</div>
+    <div id="br-t2" class="blk" style="top:1110px;font-weight:700;font-size:42px;line-height:1.5;color:#e9c97a;">منتجات مختارة من المحلات العربية</div>
 """, d_js + """
       tl.fromTo("#br-logo", { clipPath: "inset(0% 0% 100% 0%)", scale: 0.94, opacity: 1 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 1.1, ease: "power2.inOut" }, 0.1);
       tl.fromTo("#br-glow", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.out" }, 0.4);
@@ -119,7 +119,7 @@ for i, b in enumerate(BRANDS):
 fl_dur = round(0.6 + n * BEAT + 0.6, 2)
 scene("flash", fl_dur, f"""
     <div id="fl-bg" data-layout-ignore style="position:absolute;inset:0;background-color:#1a120b;"></div>
-    <div id="fl-k" class="blk" style="top:330px;font-family:'HF Amiri',serif;font-weight:700;font-size:84px;line-height:1.3;color:#f6ecd6;text-shadow:0 4px 24px rgba(0,0,0,0.5);"><span class="w">علامات</span> <span class="w" style="color:#ffffff">خليجية</span></div>
+    <div id="fl-k" class="blk" style="top:330px;font-family:'HF Amiri',serif;font-weight:700;font-size:84px;line-height:1.3;color:#f6ecd6;text-shadow:0 4px 24px rgba(0,0,0,0.5);"><span class="w">علامات</span> <span class="w" style="color:#ffffff">عربية</span></div>
     <div id="fl-k2" class="blk" style="top:450px;font-weight:700;font-size:40px;line-height:1.4;color:#ffffff;text-shadow:0 3px 18px rgba(0,0,0,0.5);">في مكان واحد</div>
 {cards}    <div id="fl-n" class="blk" style="top:1150px;font-weight:700;font-size:36px;line-height:1.4;color:#f6ecd6;direction:ltr;">١ / {ar(n)}</div>
 """, f"""
@@ -140,7 +140,7 @@ for i, b in enumerate(BRANDS):
 d_html, d_js = dust("rg", 24, 37, 4.8)
 scene("ring", 4.8, d_html + f"""
     <div id="rg-t" class="blk" style="top:330px;font-family:'HF Amiri',serif;font-weight:700;font-size:96px;line-height:1.3;color:#f6ecd6;"><span class="w">تحت</span> <span class="w">سقف</span> <span class="w" style="color:#f3d98f">واحد</span></div>
-    <div id="rg-s" class="blk" style="top:470px;font-weight:700;font-size:42px;line-height:1.4;color:#e9c97a;">منتجات من أكثر من دولة خليجية</div>
+    <div id="rg-s" class="blk" style="top:470px;font-weight:700;font-size:42px;line-height:1.4;color:#e9c97a;">منتجات من أكثر من دولة عربية</div>
     <div id="rg-stage" data-layout-allow-overflow data-layout-ignore style="position:absolute;left:0;top:0;width:1080px;height:1920px;perspective:1700px;perspective-origin:504px 960px;">
       <div id="rg-ring" style="position:absolute;left:504px;top:960px;width:0;height:0;transform-style:preserve-3d;">
 {faces}      </div>
