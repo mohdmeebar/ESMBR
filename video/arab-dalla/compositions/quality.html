@@ -10,8 +10,9 @@
       background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
     .dot { position: absolute; border-radius: 50%; background: #e9c97a; }
     .blk { position: absolute; left: 120px; width: 768px; text-align: center; }
+    .ph { position: absolute; border-radius: 30px; border: 10px solid #fbf5e8; box-shadow: 0 28px 60px rgba(0,0,0,0.45); object-fit: cover; }
   </style>
-  <div id="root" data-composition-id="quality" data-width="1080" data-height="1920" data-duration="4.8">
+  <div id="root" data-composition-id="quality" data-width="1080" data-height="1920" data-duration="4.0">
 
     <div id="ql-wall" data-layout-ignore style="position:absolute;inset:0;">
     <img id="ql-t0" src="assets/brands/hatab.jpg" alt="" style="position:absolute;left:30px;top:330px;width:300px;height:300px;border-radius:28px;" />
@@ -55,8 +56,8 @@
       tl.fromTo("#ql-l2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 1.35);
       tl.fromTo("#ql-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 1.7);
       lineIn("#ql-sub", 2.0);
-      out("#ql-txt", 4.45);
-      tl.to("#ql-wall", { scale: 1.15, opacity: 0, duration: 0.4, ease: "power2.in" }, 4.4);
+      out("#ql-txt", 3.65);
+      tl.to("#ql-wall", { scale: 1.15, opacity: 0, duration: 0.4, ease: "power2.in" }, 3.6);
 
       window.__timelines["quality"] = tl;
     })();

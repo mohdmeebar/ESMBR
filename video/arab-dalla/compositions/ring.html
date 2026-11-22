@@ -10,8 +10,9 @@
       background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
     .dot { position: absolute; border-radius: 50%; background: #e9c97a; }
     .blk { position: absolute; left: 120px; width: 768px; text-align: center; }
+    .ph { position: absolute; border-radius: 30px; border: 10px solid #fbf5e8; box-shadow: 0 28px 60px rgba(0,0,0,0.45); object-fit: cover; }
   </style>
-  <div id="root" data-composition-id="ring" data-width="1080" data-height="1920" data-duration="4.8">
+  <div id="root" data-composition-id="ring" data-width="1080" data-height="1920" data-duration="3.4">
     <div id="rg-d0" class="dot" style="left:558px;top:1914px;width:3.2px;height:3.2px;opacity:0.62;"></div>
     <div id="rg-d1" class="dot" style="left:191px;top:1840px;width:6.8px;height:6.8px;opacity:0.50;"></div>
     <div id="rg-d2" class="dot" style="left:241px;top:1430px;width:8.6px;height:8.6px;opacity:0.69;"></div>
@@ -64,37 +65,37 @@
       const lineIn = (sel, at) => tl.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.35, ease: "power3.out" }, at);
       const out = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.25, ease: "power2.in" }, at);
 
-      tl.fromTo("#rg-d0", { x: 0, y: 0 }, { x: 5, y: -112, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d1", { x: 0, y: 0 }, { x: 18, y: -176, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d2", { x: 0, y: 0 }, { x: -16, y: -234, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d3", { x: 0, y: 0 }, { x: 10, y: -105, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d4", { x: 0, y: 0 }, { x: 5, y: -156, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d5", { x: 0, y: 0 }, { x: 24, y: -101, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d6", { x: 0, y: 0 }, { x: -11, y: -191, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d7", { x: 0, y: 0 }, { x: 4, y: -84, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d8", { x: 0, y: 0 }, { x: 23, y: -129, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d9", { x: 0, y: 0 }, { x: -11, y: -159, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d10", { x: 0, y: 0 }, { x: -25, y: -99, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d11", { x: 0, y: 0 }, { x: 25, y: -208, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d12", { x: 0, y: 0 }, { x: 21, y: -132, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d13", { x: 0, y: 0 }, { x: 13, y: -228, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d14", { x: 0, y: 0 }, { x: -4, y: -113, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d15", { x: 0, y: 0 }, { x: 26, y: -146, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d16", { x: 0, y: 0 }, { x: 20, y: -165, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d17", { x: 0, y: 0 }, { x: -5, y: -166, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d18", { x: 0, y: 0 }, { x: -17, y: -154, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d19", { x: 0, y: 0 }, { x: -23, y: -92, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d20", { x: 0, y: 0 }, { x: -12, y: -119, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d21", { x: 0, y: 0 }, { x: -12, y: -196, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d22", { x: 0, y: 0 }, { x: 1, y: -84, duration: 4.8, ease: "none" }, 0);
-      tl.fromTo("#rg-d23", { x: 0, y: 0 }, { x: 13, y: -195, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d0", { x: 0, y: 0 }, { x: 5, y: -112, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d1", { x: 0, y: 0 }, { x: 18, y: -176, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d2", { x: 0, y: 0 }, { x: -16, y: -234, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d3", { x: 0, y: 0 }, { x: 10, y: -105, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d4", { x: 0, y: 0 }, { x: 5, y: -156, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d5", { x: 0, y: 0 }, { x: 24, y: -101, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d6", { x: 0, y: 0 }, { x: -11, y: -191, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d7", { x: 0, y: 0 }, { x: 4, y: -84, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d8", { x: 0, y: 0 }, { x: 23, y: -129, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d9", { x: 0, y: 0 }, { x: -11, y: -159, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d10", { x: 0, y: 0 }, { x: -25, y: -99, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d11", { x: 0, y: 0 }, { x: 25, y: -208, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d12", { x: 0, y: 0 }, { x: 21, y: -132, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d13", { x: 0, y: 0 }, { x: 13, y: -228, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d14", { x: 0, y: 0 }, { x: -4, y: -113, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d15", { x: 0, y: 0 }, { x: 26, y: -146, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d16", { x: 0, y: 0 }, { x: 20, y: -165, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d17", { x: 0, y: 0 }, { x: -5, y: -166, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d18", { x: 0, y: 0 }, { x: -17, y: -154, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d19", { x: 0, y: 0 }, { x: -23, y: -92, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d20", { x: 0, y: 0 }, { x: -12, y: -119, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d21", { x: 0, y: 0 }, { x: -12, y: -196, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d22", { x: 0, y: 0 }, { x: 1, y: -84, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#rg-d23", { x: 0, y: 0 }, { x: 13, y: -195, duration: 3.4, ease: "none" }, 0);
 
       wordsIn("#rg-t", 0.05, 0.1);
-      lineIn("#rg-s", 0.45);
-      tl.fromTo("#rg-ring", { rotationX: -6, rotationY: 40, scale: 0.55, opacity: 0 }, { rotationX: -6, rotationY: -20, scale: 1, opacity: 1, duration: 1.0, ease: "power3.out" }, 0.0);
-      tl.to("#rg-ring", { rotationY: -300, duration: 3.4, ease: "none" }, 1.0);
-      out("#rg-t, #rg-s", 4.45);
-      tl.to("#rg-stage", { scale: 1.7, opacity: 0, filter: "blur(12px)", duration: 0.4, ease: "power3.in" }, 4.4);
+      lineIn("#rg-s", 0.4);
+      tl.fromTo("#rg-ring", { rotationX: -6, rotationY: 40, scale: 0.55, opacity: 0 }, { rotationX: -6, rotationY: -20, scale: 1, opacity: 1, duration: 0.9, ease: "power3.out" }, 0.0);
+      tl.to("#rg-ring", { rotationY: -250, duration: 2.2, ease: "none" }, 0.9);
+      out("#rg-t, #rg-s", 3.05);
+      tl.to("#rg-stage", { scale: 1.7, opacity: 0, filter: "blur(12px)", duration: 0.4, ease: "power3.in" }, 3.0);
 
       window.__timelines["ring"] = tl;
     })();
