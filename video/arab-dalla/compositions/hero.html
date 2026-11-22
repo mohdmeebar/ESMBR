@@ -24,8 +24,8 @@
     .led { position: absolute; left: 30px; width: 1020px; height: 3px; border-radius: 2px; background: #ffe7bb; box-shadow: 0 0 14px 4px rgba(255,214,150,0.75); }
     .glow { position: absolute; left: 0; width: 1080px; background: linear-gradient(180deg, rgba(255,208,140,0.34), rgba(255,208,140,0.07) 70%, rgba(255,208,140,0)); }
     .card { position: absolute; object-fit: cover; border-radius: 14px; border: 5px solid #f7f0e3; box-shadow: 0 18px 26px rgba(0,0,0,0.5); }
-    .tag { position: absolute; height: 44px; padding: 0 16px; border-radius: 8px; background: #f7f0e3; color: #3a2416;
-      font-weight: 800; font-size: 28px; line-height: 44px; white-space: nowrap; box-shadow: 0 6px 12px rgba(0,0,0,0.35); }
+    .tag { position: absolute; padding: 2px 16px; border-radius: 8px; background: #f7f0e3; color: #3a2416; text-align: center;
+      font-weight: 800; font-size: 28px; line-height: 40px; width: max-content; box-shadow: 0 6px 12px rgba(0,0,0,0.35); }
     .pill { position: absolute; height: 84px; border-radius: 42px; display: flex; align-items: center; justify-content: center; gap: 18px; direction: ltr; }
     .pill span { font-weight: 800; font-size: 44px; line-height: 1; }
     .goldtxt { background: linear-gradient(100deg, #6b4314 0%, #a8732a 30%, #e2b865 50%, #a8732a 70%, #6b4314 100%);
@@ -67,11 +67,12 @@
     <div class="board" style="top:1870px;"></div>
     <div class="led" style="top:1894px;opacity:0.55;"></div>
     <div class="glow" style="top:1896px;height:250px;opacity:0.5;"></div>
-    <div id="hr-t0" class="tag" style="top:746px;left:240px;transform:translateX(-50%);">الدلة الذهبية</div>
-    <div id="hr-t1" class="tag" style="top:746px;left:504px;transform:translateX(-50%);">الدلة الفضية</div>
-    <div id="hr-t2" class="tag" style="top:746px;left:768px;transform:translateX(-50%);">دلة الضيوف</div>
-    <div id="hr-t3" class="tag" style="top:1026px;left:240px;transform:translateX(-50%);">سخان الحليب</div>
-    <div id="hr-t4" class="tag" style="top:1026px;left:504px;transform:translateX(-50%);">بريق الكرك</div>
+    <div id="hr-t0" class="tag" style="top:746px;left:240px;max-width:230px;transform:translateX(-50%);">الدلة الذهبية</div>
+    <div id="hr-t1" class="tag" style="top:746px;left:504px;max-width:230px;transform:translateX(-50%);">الدلة الفضية</div>
+    <div id="hr-t2" class="tag" style="top:746px;left:768px;max-width:230px;transform:translateX(-50%);">دلة الضيوف</div>
+    <div id="hr-t3" class="tag" style="top:1026px;left:240px;max-width:230px;transform:translateX(-50%);">سخان الحليب</div>
+    <div id="hr-t4" class="tag" style="top:1026px;left:504px;max-width:230px;transform:translateX(-50%);">بريق الكرك</div>
+    <div id="hr-t5" class="tag" style="top:1026px;left:768px;max-width:230px;transform:translateX(-50%);">صانعة القهوة التركية</div>
     </div>
     <div id="hr-pill" class="pill" style="left:214px;top:1150px;width:580px;background:#f6ecd6;box-shadow:0 14px 30px rgba(0,0,0,0.45);"><svg width="50" height="50" viewBox="0 0 56 56"><circle cx="28" cy="28" r="28" fill="#2f9e57"/><path d="M28 13c-8.3 0-15 6.1-15 13.7 0 3 1.1 5.8 2.9 8.1L14 42l7.6-2.3c1.9.8 4.1 1.3 6.4 1.3 8.3 0 15-6.1 15-13.7S36.3 13 28 13z" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M22.5 22.5c.6 3.7 3.6 7.6 8 9.4l2.2-2.2 3 1.4-.4 2.6c-6.8.6-13.8-6.4-13.2-13.2l2.6-.4 1.4 3z" fill="#fff"/></svg><span style="color:#2a1c10;">+973 33337811</span></div>
 
@@ -99,6 +100,7 @@
       tl.fromTo("#hr-c4", { opacity: 0, y: 50, scale: 0.82, transformOrigin: "50% 100%" }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, 1.67);
       tl.fromTo("#hr-t4", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 1.97);
       tl.fromTo("#hr-c5", { opacity: 0, y: 50, scale: 0.82, transformOrigin: "50% 100%" }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, 1.95);
+      tl.fromTo("#hr-t5", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 2.25);
       lineIn("#hr-pill", 1.2);
       out("#hr-logo, #hr-by, #hr-pill", 5.48);
       tl.to("#hr-stage", { x: -260, opacity: 0, duration: 0.3, ease: "power2.in" }, 5.48);

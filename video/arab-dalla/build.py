@@ -43,8 +43,8 @@ HEAD = """  <style>
     .led { position: absolute; left: 30px; width: 1020px; height: 3px; border-radius: 2px; background: #ffe7bb; box-shadow: 0 0 14px 4px rgba(255,214,150,0.75); }
     .glow { position: absolute; left: 0; width: 1080px; background: linear-gradient(180deg, rgba(255,208,140,0.34), rgba(255,208,140,0.07) 70%, rgba(255,208,140,0)); }
     .card { position: absolute; object-fit: cover; border-radius: 14px; border: 5px solid #f7f0e3; box-shadow: 0 18px 26px rgba(0,0,0,0.5); }
-    .tag { position: absolute; height: 44px; padding: 0 16px; border-radius: 8px; background: #f7f0e3; color: #3a2416;
-      font-weight: 800; font-size: 28px; line-height: 44px; white-space: nowrap; box-shadow: 0 6px 12px rgba(0,0,0,0.35); }
+    .tag { position: absolute; padding: 2px 16px; border-radius: 8px; background: #f7f0e3; color: #3a2416; text-align: center;
+      font-weight: 800; font-size: 28px; line-height: 40px; width: max-content; box-shadow: 0 6px 12px rgba(0,0,0,0.35); }
     .pill { position: absolute; height: 84px; border-radius: 42px; display: flex; align-items: center; justify-content: center; gap: 18px; direction: ltr; }
     .pill span { font-weight: 800; font-size: 44px; line-height: 1; }
     .goldtxt { background: linear-gradient(100deg, #6b4314 0%, #a8732a 30%, #e2b865 50%, #a8732a 70%, #6b4314 100%);
@@ -126,7 +126,8 @@ def shelves(sid, rows, s, top_board, items, tags=None, gap=24, deco=True):
             html += f'    <img id="{cid}" class="card" src="{items[idx]}" alt="" style="left:{x}px;top:{y_cards}px;width:{s}px;height:{s}px;" />\n'
             ids.append(cid)
             if tags and tags[idx]:
-                labels += f'    <div id="{sid}-t{idx}" class="tag" style="top:{y_cards + s - 4}px;left:{x + s // 2}px;transform:translateX(-50%);">{tags[idx]}</div>\n'
+                # a label never runs wider than its card: a long name wraps onto a second line
+                labels += f'    <div id="{sid}-t{idx}" class="tag" style="top:{y_cards + s - 4}px;left:{x + s // 2}px;max-width:{s}px;transform:translateX(-50%);">{tags[idx]}</div>\n'
             x += s + gap
             idx += 1
         y = y_cards + s
@@ -200,7 +201,7 @@ PLAN.append(("brand", D))
 
 # ---------------- 3. the house brand: Deem by Arab Dalla, on the shop's walnut shelves ----------------
 DEEM = [("deem-1.jpg", "الدلة الذهبية"), ("deem-2.jpg", "الدلة الفضية"), ("deem-3.jpg", "دلة الضيوف"),
-        ("deem-4.jpg", "سخان الحليب"), ("deem-5.jpg", "بريق الكرك"), ("deem-6.jpg", "")]
+        ("deem-4.jpg", "سخان الحليب"), ("deem-5.jpg", "بريق الكرك"), ("deem-6.jpg", "صانعة القهوة التركية")]
 D = 5.8
 sh, ids, bottom = shelves("hr", [3, 3], 230, 470, [f"assets/products/{p}" for p, _ in DEEM], [n for _, n in DEEM], gap=34)
 js = ""
