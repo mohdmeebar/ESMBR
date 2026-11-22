@@ -10,7 +10,7 @@ os.makedirs(os.path.join(OUT, "compositions"), exist_ok=True)
 for f in os.listdir(os.path.join(OUT, "compositions")):
     os.remove(os.path.join(OUT, "compositions", f))
 
-CX = 504          # centre of the platforms' shared safe area (120..888)
+CX = 540          # the frame's true centre
 PHONE = "+973 33337811"
 
 
@@ -25,7 +25,7 @@ HEAD = """  <style>
     @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
     #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; overflow: hidden; }
     .w { display: inline-block; }
-    .blk { position: absolute; left: 120px; width: 768px; text-align: center; }
+    .blk { position: absolute; left: 156px; width: 768px; text-align: center; }
     .plaster { position: absolute; inset: 0; background-color: #efe6d4;
       background-image:
         radial-gradient(70% 45% at 30% 18%, rgba(255,255,255,0.6), rgba(255,255,255,0) 70%),
@@ -184,7 +184,7 @@ PLAN.append(("hook", D))
 D = 3.4
 scene("brand", D, f"""
     <div class="plaster"></div>
-{rosette(110, 1600, 130, "br-r1")}{rosette(900, 1600, 130, "br-r2")}    <div id="br-panel" style="position:absolute;left:{CX - 380}px;top:380px;width:760px;height:440px;border-radius:6px;
+{rosette(120, 1600, 130, "br-r1")}{rosette(960, 1600, 130, "br-r2")}    <div id="br-panel" style="position:absolute;left:{CX - 380}px;top:380px;width:760px;height:440px;border-radius:6px;
       background:#f3ebdc;box-shadow: inset 0 0 0 3px #e2d5bd, inset 6px 6px 14px rgba(120,90,55,0.22), inset -4px -4px 10px rgba(255,255,255,0.8);"></div>
     <div id="br-logo" style="position:absolute;left:{CX - 320}px;top:410px;width:640px;height:380px;padding:30px 20px;"><img src="assets/logo-dark.png" alt="" style="display:block;width:600px;height:323px;" /></div>
     <div id="br-t1" class="blk" style="top:900px;font-family:'HF Amiri',serif;font-weight:700;font-size:92px;line-height:1.3;color:#4a2c1d;"><span class="w">متخصصون</span> <span class="w">في</span> <span class="w" style="color:#8a5a1f">الضيافة</span></div>
@@ -345,7 +345,7 @@ PLAN.append(("quality", D))
 D = 4.4
 scene("end", D, f"""
     <div class="plaster"></div>
-{rosette(110, 210, 140, "en-r1")}{rosette(900, 210, 140, "en-r2")}{rosette(110, 1700, 140, "en-r3")}{rosette(900, 1700, 140, "en-r4")}    <div id="en-panel" style="position:absolute;left:{CX - 360}px;top:340px;width:720px;height:420px;border-radius:6px;
+{rosette(120, 210, 140, "en-r1")}{rosette(960, 210, 140, "en-r2")}{rosette(120, 1700, 140, "en-r3")}{rosette(960, 1700, 140, "en-r4")}    <div id="en-panel" style="position:absolute;left:{CX - 360}px;top:340px;width:720px;height:420px;border-radius:6px;
       background:#f3ebdc;box-shadow: inset 0 0 0 3px #e2d5bd, inset 6px 6px 14px rgba(120,90,55,0.22), inset -4px -4px 10px rgba(255,255,255,0.8);"></div>
     <div id="en-logo" style="position:absolute;left:{CX - 300}px;top:370px;width:600px;height:360px;padding:30px 20px;"><img src="assets/logo-dark.png" alt="" style="display:block;width:560px;height:301px;" /></div>
     <div id="en-t" class="blk" style="top:820px;font-family:'HF Amiri',serif;font-weight:700;font-size:84px;line-height:1.3;color:#4a2c1d;"><span class="w">جودة</span> <span class="w">تليق</span> <span class="w" style="color:#8a5a1f">بضيافتك</span></div>
