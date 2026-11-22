@@ -1,0 +1,57 @@
+[
+ {
+  "key": "hatab",
+  "bg": "#ffffff",
+  "flood": "#948d87"
+ },
+ {
+  "key": "shamali",
+  "bg": "#dad7aa",
+  "flood": "#82795d"
+ },
+ {
+  "key": "roedeer",
+  "bg": "#36154e",
+  "flood": "#30182f"
+ },
+ {
+  "key": "nibs",
+  "bg": "#ccc1a3",
+  "flood": "#7b6e59"
+ },
+ {
+  "key": "bahi",
+  "bg": "#2f301e",
+  "flood": "#2c2617"
+ },
+ {
+  "key": "krokant",
+  "bg": "#f2c5b2",
+  "flood": "#8e7061"
+ },
+ {
+  "key": "babsharqi",
+  "bg": "#333621",
+  "flood": "#2e2918"
+ },
+ {
+  "key": "hint",
+  "bg": "#ebab7f",
+  "flood": "#8a6347"
+ },
+ {
+  "key": "arena",
+  "bg": "#f0af47",
+  "flood": "#8d652b"
+ },
+ {
+  "key": "quiet",
+  "bg": "#b6a498",
+  "flood": "#706054"
+ },
+ {
+  "key": "nuts",
+  "bg": "#f2e9e2",
+  "flood": "#8e8279"
+ }
+]

@@ -1,0 +1,102 @@
+<template>
+  <style>
+    @font-face { font-family: "HF Amiri"; font-weight: 700; src: url("assets/fonts/amiri-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 400; src: url("assets/fonts/cairo-400.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 700; src: url("assets/fonts/cairo-700.woff2") format("woff2"); }
+    @font-face { font-family: "HF Cairo"; font-weight: 800; src: url("assets/fonts/cairo-800.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; direction: rtl; font-family: "HF Cairo", sans-serif; color: #f6ecd6; overflow: hidden; }
+    .w { display: inline-block; }
+    .goldtxt { background: linear-gradient(100deg, #b8913a 0%, #f6dd94 35%, #fff4cf 50%, #f6dd94 65%, #b8913a 100%);
+      background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .dot { position: absolute; border-radius: 50%; background: #e9c97a; }
+    .blk { position: absolute; left: 120px; width: 768px; text-align: center; }
+  </style>
+  <div id="root" data-composition-id="ring" data-width="1080" data-height="1920" data-duration="4.8">
+    <div id="rg-d0" class="dot" style="left:558px;top:1914px;width:3.2px;height:3.2px;opacity:0.62;"></div>
+    <div id="rg-d1" class="dot" style="left:191px;top:1840px;width:6.8px;height:6.8px;opacity:0.50;"></div>
+    <div id="rg-d2" class="dot" style="left:241px;top:1430px;width:8.6px;height:8.6px;opacity:0.69;"></div>
+    <div id="rg-d3" class="dot" style="left:649px;top:1443px;width:3.7px;height:3.7px;opacity:0.49;"></div>
+    <div id="rg-d4" class="dot" style="left:330px;top:1447px;width:4.9px;height:4.9px;opacity:0.58;"></div>
+    <div id="rg-d5" class="dot" style="left:1048px;top:690px;width:5.2px;height:5.2px;opacity:0.51;"></div>
+    <div id="rg-d6" class="dot" style="left:987px;top:246px;width:4.3px;height:4.3px;opacity:0.54;"></div>
+    <div id="rg-d7" class="dot" style="left:923px;top:340px;width:4.3px;height:4.3px;opacity:0.58;"></div>
+    <div id="rg-d8" class="dot" style="left:1070px;top:1736px;width:3.3px;height:3.3px;opacity:0.40;"></div>
+    <div id="rg-d9" class="dot" style="left:551px;top:789px;width:7.7px;height:7.7px;opacity:0.62;"></div>
+    <div id="rg-d10" class="dot" style="left:495px;top:1893px;width:6.7px;height:6.7px;opacity:0.38;"></div>
+    <div id="rg-d11" class="dot" style="left:794px;top:921px;width:5.0px;height:5.0px;opacity:0.67;"></div>
+    <div id="rg-d12" class="dot" style="left:497px;top:944px;width:3.7px;height:3.7px;opacity:0.40;"></div>
+    <div id="rg-d13" class="dot" style="left:389px;top:522px;width:5.3px;height:5.3px;opacity:0.25;"></div>
+    <div id="rg-d14" class="dot" style="left:12px;top:76px;width:4.6px;height:4.6px;opacity:0.44;"></div>
+    <div id="rg-d15" class="dot" style="left:136px;top:868px;width:8.8px;height:8.8px;opacity:0.65;"></div>
+    <div id="rg-d16" class="dot" style="left:277px;top:274px;width:3.8px;height:3.8px;opacity:0.39;"></div>
+    <div id="rg-d17" class="dot" style="left:91px;top:581px;width:7.5px;height:7.5px;opacity:0.59;"></div>
+    <div id="rg-d18" class="dot" style="left:414px;top:1420px;width:5.9px;height:5.9px;opacity:0.57;"></div>
+    <div id="rg-d19" class="dot" style="left:323px;top:1681px;width:3.1px;height:3.1px;opacity:0.41;"></div>
+    <div id="rg-d20" class="dot" style="left:226px;top:1023px;width:5.8px;height:5.8px;opacity:0.26;"></div>
+    <div id="rg-d21" class="dot" style="left:370px;top:1272px;width:3.5px;height:3.5px;opacity:0.39;"></div>
+    <div id="rg-d22" class="dot" style="left:110px;top:837px;width:4.0px;height:4.0px;opacity:0.61;"></div>
+    <div id="rg-d23" class="dot" style="left:883px;top:1852px;width:4.8px;height:4.8px;opacity:0.49;"></div>
+
+    <div id="rg-t" class="blk" style="top:330px;font-family:'HF Amiri',serif;font-weight:700;font-size:96px;line-height:1.3;color:#f6ecd6;"><span class="w">تحت</span> <span class="w">سقف</span> <span class="w" style="color:#f3d98f">واحد</span></div>
+    <div id="rg-s" class="blk" style="top:470px;font-weight:700;font-size:42px;line-height:1.4;color:#e9c97a;">منتجات من أكثر من دولة خليجية</div>
+    <div id="rg-stage" data-layout-allow-overflow data-layout-ignore style="position:absolute;left:0;top:0;width:1080px;height:1920px;perspective:1700px;perspective-origin:504px 960px;">
+      <div id="rg-ring" style="position:absolute;left:504px;top:960px;width:0;height:0;transform-style:preserve-3d;">
+        <img src="assets/brands/hatab.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(0.00deg) translateZ(520px);" />
+        <img src="assets/brands/shamali.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(32.73deg) translateZ(520px);" />
+        <img src="assets/brands/roedeer.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(65.45deg) translateZ(520px);" />
+        <img src="assets/brands/nibs.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(98.18deg) translateZ(520px);" />
+        <img src="assets/brands/bahi.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(130.91deg) translateZ(520px);" />
+        <img src="assets/brands/krokant.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(163.64deg) translateZ(520px);" />
+        <img src="assets/brands/babsharqi.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(196.36deg) translateZ(520px);" />
+        <img src="assets/brands/hint.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(229.09deg) translateZ(520px);" />
+        <img src="assets/brands/arena.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(261.82deg) translateZ(520px);" />
+        <img src="assets/brands/quiet.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(294.55deg) translateZ(520px);" />
+        <img src="assets/brands/nuts.jpg" alt="" style="position:absolute;left:-150px;top:-150px;width:300px;height:300px;border-radius:26px;backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotateY(327.27deg) translateZ(520px);" />
+      </div>
+    </div>
+
+  </div>
+  <script>
+    (function () {
+
+      const tl = gsap.timeline({ paused: true });
+      const wordsIn = (sel, at, gap) => tl.fromTo(sel + " .w", { opacity: 0, filter: "blur(10px)", y: 30 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.35, ease: "power4.out", stagger: gap || 0.1 }, at);
+      const lineIn = (sel, at) => tl.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.35, ease: "power3.out" }, at);
+      const out = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.25, ease: "power2.in" }, at);
+
+      tl.fromTo("#rg-d0", { x: 0, y: 0 }, { x: 5, y: -112, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d1", { x: 0, y: 0 }, { x: 18, y: -176, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d2", { x: 0, y: 0 }, { x: -16, y: -234, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d3", { x: 0, y: 0 }, { x: 10, y: -105, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d4", { x: 0, y: 0 }, { x: 5, y: -156, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d5", { x: 0, y: 0 }, { x: 24, y: -101, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d6", { x: 0, y: 0 }, { x: -11, y: -191, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d7", { x: 0, y: 0 }, { x: 4, y: -84, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d8", { x: 0, y: 0 }, { x: 23, y: -129, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d9", { x: 0, y: 0 }, { x: -11, y: -159, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d10", { x: 0, y: 0 }, { x: -25, y: -99, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d11", { x: 0, y: 0 }, { x: 25, y: -208, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d12", { x: 0, y: 0 }, { x: 21, y: -132, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d13", { x: 0, y: 0 }, { x: 13, y: -228, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d14", { x: 0, y: 0 }, { x: -4, y: -113, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d15", { x: 0, y: 0 }, { x: 26, y: -146, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d16", { x: 0, y: 0 }, { x: 20, y: -165, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d17", { x: 0, y: 0 }, { x: -5, y: -166, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d18", { x: 0, y: 0 }, { x: -17, y: -154, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d19", { x: 0, y: 0 }, { x: -23, y: -92, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d20", { x: 0, y: 0 }, { x: -12, y: -119, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d21", { x: 0, y: 0 }, { x: -12, y: -196, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d22", { x: 0, y: 0 }, { x: 1, y: -84, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#rg-d23", { x: 0, y: 0 }, { x: 13, y: -195, duration: 4.8, ease: "none" }, 0);
+
+      wordsIn("#rg-t", 0.05, 0.1);
+      lineIn("#rg-s", 0.45);
+      tl.fromTo("#rg-ring", { rotationX: -6, rotationY: 40, scale: 0.55, opacity: 0 }, { rotationX: -6, rotationY: -20, scale: 1, opacity: 1, duration: 1.0, ease: "power3.out" }, 0.0);
+      tl.to("#rg-ring", { rotationY: -300, duration: 3.4, ease: "none" }, 1.0);
+      out("#rg-t, #rg-s", 4.45);
+      tl.to("#rg-stage", { scale: 1.7, opacity: 0, filter: "blur(12px)", duration: 0.4, ease: "power3.in" }, 4.4);
+
+      window.__timelines["ring"] = tl;
+    })();
+  </script>
+</template>
